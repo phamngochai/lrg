@@ -2,7 +2,6 @@ import os
 import sys
 import pycurl
 
-
 DEBUG = 1
 
 VERSION = '0.1.0'
@@ -17,6 +16,7 @@ STAT_S = 3
 STAT_Z = 4
 STAT_X = 5
 STAT_E = -1
+
 
 STAT_QUEUING = 'Queuing'
 STAT_DOWNLOADING = 'Downloading'
