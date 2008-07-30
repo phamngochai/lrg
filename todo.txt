@@ -1,0 +1,16 @@
+Todo:
+D wrong pass
+- donwload foder [with password]
+D tried columm
+- cookiejar
+D downloadFileControl fileexist
+D use thread to move tmp files
+- reuse objects
+- right click file property
+- proxy auth
+D Save downloaded list
+- Redownload
+- Reset password, change rp account
+- Speed limit
+- Color line
+- change download order
