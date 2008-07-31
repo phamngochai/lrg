@@ -73,12 +73,14 @@ class DownloadPartControl:
 				
 			self.curlClass.setProcessBody(self.writeBody)
 			self.curlClass.setProgress(self.progressBody)
-			self.curlClass.setControlType(CURL_DLPART)
+			#self.curlClass.setControlType(CURL_DLPART)
+			self.curlClass.setPartNo(self.downloadPart.getPartNo())
 			#print 'Perform now'
 			self.curl = self.curlClass.getCurlObject()
 			
+			print 'DownloadPartControl adding curlObject ', self.curl
 			self.downloadFileControl.addCurlObjectToControl(self.curl)
-			print 'DownloadPartControl added curlObject ', self.downloadPart.getId()
+			#print 'DownloadPartControl added curlObject ', self.downloadPart.getId()
 		
 		except pycurl.error, e:
 			print 'DownloadPartControl Exception  ', self.downloadPart.getId(), ' ', pycurl.error, ' ', e
@@ -104,13 +106,17 @@ class DownloadPartControl:
 	def isCompleted(self):
 		if (self.downloadPart.isCompleted()):
 			#print 'Trying to close from isCompleted ', self.downloadPart.getTmpFileName()
-			if (self.fileObj != None and not self.fileObj.closed):
-				self.fileObj.flush()
-				self.fileObj.close()
+			self.closeTmpFile()
 			return True
 		else:
 			return False
 	
+
+	def closeTmpFile(self):
+		if (self.fileObj != None and not self.fileObj.closed):
+			self.fileObj.flush()
+			self.fileObj.close()
+
 			
 			
 	def writeBody(self, buf):

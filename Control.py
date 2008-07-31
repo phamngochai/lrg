@@ -3,6 +3,7 @@ import cPickle
 import time
 import wx
 import threading
+import pycurl
 
 from ConfigUtils import *
 from Const import *
@@ -82,8 +83,9 @@ class Control(threading.Thread):
 		#lockkkk?
 		#print 'control addCurlObject getting lock'
 		self.curlLock.acquire()
+		#print 'adding ', curlObject
 		self.queueingCurlObjectList.append(curlObject)
-		#print 'control addCurlObject releasing lock'
+		#print 'control addCurlE_OPERATION_TIMEOUTEDObject releasing lock'
 		self.curlLock.release()
 		
 	#get a curl from the list
@@ -259,13 +261,14 @@ class Control(threading.Thread):
 				for c in ok_list:
 					#c.close()
 					multiHandler.remove_handle(c)
+					print 'ok_list removed handle ', c
 					httpCode = int(c.getinfo(pycurl.HTTP_CODE))
 					#print 'httpCode ', httpCode
 					for downloadFileControl in self.downloadFileControlList:
 						#print 'Debug ', downloadFileControl
 						#print 'Checking ', downloadFileControl.getDownloadFile().getId(), ' ', c.downloadFileId
 						if (downloadFileControl.getDownloadFile().getId() == c.downloadFileId):
-							if (c.controlType == CURL_DLPART):
+							if (c.partNo != None):
 								downloadFileControl.checkFinish()
 								#downloadFileControl.reset()		
 								break
@@ -285,11 +288,24 @@ class Control(threading.Thread):
   				for c, errno, errmsg in err_list:
   					#c.close()
   					multiHandler.remove_handle(c)
+  					print 'err_list removed handle ', c
   					httpCode = int(c.getinfo(pycurl.HTTP_CODE))
-  					#print 'httpCode ', httpCode
+  					print 'err_list httpCode ', httpCode
 					for downloadFileControl in self.downloadFileControlList:
 						#print 'Debug ', downloadFileControl
 						if (downloadFileControl.getDownloadFile().getId() == c.downloadFileId):
+						
+							if (errno == pycurl.E_OPERATION_TIMEOUTED):
+								if (downloadFileControl.getDownloadFile().isRetryPossible()):					
+									if (c.partNo != None):
+										downloadFileControl.resetPart(c.partNo)
+									elif (downloadFileControl.getDownloadFile().isRetryPossible()):
+										downloadFileControl.continueBuildCurl()
+								else:							
+									downloadFileControl.reportError(errmsg)
+									
+								break
+														
 							if (httpCode == 404):
 								#print 'Fail resetting 404'
 								downloadFileControl.getDownloadFile().setStatus(STAT_E)
@@ -297,10 +313,10 @@ class Control(threading.Thread):
 								self.mainFrame.update(downloadFileControl.getDownloadFile())
 								downloadFileControl.reset()
 							elif (downloadFileControl.isDone() == False and  downloadFileControl.isBusy() == False):
-								#print 'Fail curlObject ', downloadFileControl.getDownloadFile().getId(), ' errno ', errno, ' errmsg ', errmsg
+								print 'err_list Fail curlObject ', downloadFileControl.getDownloadFile().getId(), ' errno ', errno, ' errmsg ', errmsg
 								downloadFileControl.continueBuildCurl()
 							break
-  					#print 'Failed: ', ' errno ', errno, ' errmsg ', errmsg 
+  					print 'err_list Failed: ', ' errno ', errno, ' errmsg ', errmsg 
   					#freelist.append(c)
   				#num_processed = num_processed + len(ok_list) + len(err_list)
   				if num_q == 0:

@@ -181,6 +181,7 @@ class DownloadFileControl:
 				self.curlClass.setProcessBody(self.processBody)
 				self.curlObject = self.curlClass.getCurlObject()
 				
+				print 'downloadFileControl adding curl ', self.curlObject
 				self.addCurlObjectToControl(self.curlObject)
 				
 				#print 'DownloadFileControl curlObject added',  self.downloadFile.getId()
@@ -254,6 +255,14 @@ class DownloadFileControl:
 		#else:
 			
 		#	print 'MAX RETRY REACHED, abord now ', self.downloadFile.getId()
+		
+	def resetPart(self, partNo):
+		for downloadPartControl in self.downloadPartControlList:
+			if (downloadPartControl.getDownloadPart().getPartNo() == partNo):
+				downloadPartControl.closeTmpFile()
+				downloadPartControl.run()
+				break
+		
 		
 	def finishPart(self, downloadPart):
 		self.checkFinish()

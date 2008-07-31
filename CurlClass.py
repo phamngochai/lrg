@@ -19,7 +19,12 @@ class CurlClass:
 		self.curl.setopt(pycurl.FOLLOWLOCATION, 1)
 		self.curl.setopt(pycurl.MAXREDIRS, 5)
 		self.curl.setopt(pycurl.NOSIGNAL, 1)
-		self.curl.setopt(pycurl.CONNECTTIMEOUT, Config.settings.maxTimeout)
+		self.curl.setopt(pycurl.CONNECTTIMEOUT, Config.settings.maxConnectionTimeout)
+		self.curl.setopt(pycurl.TIMEOUT, Config.settings.maxTransferTimeout)
+		
+		#self.curl.controlType = None
+		self.curl.partNo = None
+		
 		
 	def setFormInfo(self, formAction, formInfo = None):
 		if (formInfo != None):			
@@ -30,7 +35,7 @@ class CurlClass:
 	def setProcessHeader(self, processHeader):	
 		self.curl.setopt(pycurl.HEADERFUNCTION, processHeader)
 		
-	def setProcessBody(self, processBody):		
+	def setProcessBody(self, processBody):
 		self.curl.setopt(pycurl.WRITEFUNCTION, processBody)
 
 	def setProgress(self, progressFunction):
@@ -50,11 +55,12 @@ class CurlClass:
 		#self.curl.setopt(pycurl.COOKIEFILE, Config.settings.cookieFileName)
 		#self.curl.setopt(pycurl.COOKIEJAR, Config.settings.cookieFileName)
 		
-	def setControlType(self, type):
-		self.curl.controlType = type
+	#def setControlType(self, type):
+		#self.curl.controlType = type
 		#if (type == CURL_DLPART):
 			#self.curl.setopt(pycurl.HTTPHEADER, ['Range: firefox-bin'])		
-		
+	def setPartNo(self, partNo):
+		self.partNo = partNo
 
 	def getCurlObject(self):
 		return self.curl

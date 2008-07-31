@@ -39,7 +39,8 @@ class Config:
 			Config.settings.tmpDir = str(TMP_DIR)
 			Config.settings.tmpExt = str(TMP_EXT)
 			Config.settings.chunkSize = CHUNK_SIZE
-			Config.settings.maxTimeout = MAX_TIMEOUT
+			Config.settings.maxConnectionTimeout = MAX_CONNECTION_TIMEOUT
+			Config.settings.maxTransferTimeout = MAX_TRANSFER_TIMEOUT
 			Config.settings.maxRetry = MAX_RETRY
 			Config.settings.cookieFileName = str(COOKIE_FILE)
 			Config.settings.reportSize = REPORT_SIZE
