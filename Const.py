@@ -2,7 +2,7 @@ import os
 import sys
 import pycurl
 
-DEBUG = 1
+DEBUG = 0
 
 VERSION = '0.1.0'
 

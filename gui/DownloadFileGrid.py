@@ -80,6 +80,8 @@ class DownloadFileGrid(wx.grid.Grid):
 				if (updateType != None):
 					for col in updateType:
 						self.SetCellValue(i, col, downloadFile.getInfoByCol(col))
+				break
+			
 					
 		self.ForceRefresh()
 		

@@ -78,7 +78,7 @@ class DownloadPartControl:
 			#print 'Perform now'
 			self.curl = self.curlClass.getCurlObject()
 			
-			print 'DownloadPartControl adding curlObject ', self.curl
+			#print 'DownloadPartControl adding curlObject ', self.curl
 			self.downloadFileControl.addCurlObjectToControl(self.curl)
 			#print 'DownloadPartControl added curlObject ', self.downloadPart.getId()
 		

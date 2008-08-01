@@ -60,7 +60,7 @@ class CurlClass:
 		#if (type == CURL_DLPART):
 			#self.curl.setopt(pycurl.HTTPHEADER, ['Range: firefox-bin'])		
 	def setPartNo(self, partNo):
-		self.partNo = partNo
+		self.curl.partNo = partNo
 
 	def getCurlObject(self):
 		return self.curl

@@ -9,7 +9,7 @@ D use thread to move tmp files
 - right click file property
 - proxy auth
 D Save downloaded list
-- Redownload
+D Redownload
 - Reset password, change rp account
 - Speed limit
 - Color line

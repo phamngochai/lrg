@@ -75,10 +75,13 @@ class DownloadFileControl:
 	def isDone(self):
 		return self.done
 	
-	def continueBuildCurl(self):
+	def continueBuildCurl(self, increaseRetry = False):
 		self.gotJob = True
 		#self.done = False
 		self.busy = True
+		if (increaseRetry):
+			self.downloadFile.increaseRetry()
+			self.control.report(self.downloadFile, updateType = [RETRY_COL])
 		self.run()
 		
 	def reset(self):
@@ -181,7 +184,7 @@ class DownloadFileControl:
 				self.curlClass.setProcessBody(self.processBody)
 				self.curlObject = self.curlClass.getCurlObject()
 				
-				print 'downloadFileControl adding curl ', self.curlObject
+				#print 'downloadFileControl adding curl ', self.curlObject
 				self.addCurlObjectToControl(self.curlObject)
 				
 				#print 'DownloadFileControl curlObject added',  self.downloadFile.getId()
@@ -257,6 +260,11 @@ class DownloadFileControl:
 		#	print 'MAX RETRY REACHED, abord now ', self.downloadFile.getId()
 		
 	def resetPart(self, partNo):
+		self.downloadFile.setStatus(STAT_D)
+		self.downloadFile.setErrorStr('')
+		self.downloadFile.increaseRetry()
+		self.control.report(self.downloadFile, updateType = [FILESTATUS_COL, RETRY_COL, FILEERROR_COL])
+	
 		for downloadPartControl in self.downloadPartControlList:
 			if (downloadPartControl.getDownloadPart().getPartNo() == partNo):
 				downloadPartControl.closeTmpFile()
