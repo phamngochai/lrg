@@ -22,5 +22,7 @@ app = wx.PySimpleApp()
 app.SetAssertMode(wx.PYAPP_ASSERT_DIALOG)
 
 control = Control(log)
+mainFrame = MainFrame(None, wx.ID_ANY, "Linux Rapidshare Grabber", (0, 0), (800, 600), control)
+control.setMainFrame(mainFrame)
 control.start()
 app.MainLoop()

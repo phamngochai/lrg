@@ -39,9 +39,17 @@ class Control(threading.Thread):
 		
 		
 		
-		self.mainFrame = MainFrame(None, wx.ID_ANY, "Linux Rapidshare Grabber", (0, 0), (800, 600), self, self.downloadFileList)
+		#self.mainFrame = MainFrame(None, wx.ID_ANY, "Linux Rapidshare Grabber", (0, 0), (800, 600), self, self.downloadFileList)
+		self.mainFrame = None
 		
 		#show the list in GUI
+
+			
+		self.downloadFileControlList = []
+
+
+	def setMainFrame(self, mainFrame):
+		self.mainFrame = mainFrame
 		for downloadFile in self.downloadFileList.getList():
 			#print downloadFile
 			self.mainFrame.addDownloadFileToList(downloadFile, PANEL_TOP)
@@ -50,8 +58,6 @@ class Control(threading.Thread):
 			#print downloadFile
 			self.mainFrame.addDownloadFileToList(downloadFile, PANEL_BOT)
 
-			
-		self.downloadFileControlList = []
 
 	#Add an url to the queueing list
 	def addURL(self, fileURL):

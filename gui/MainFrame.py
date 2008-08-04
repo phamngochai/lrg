@@ -33,7 +33,7 @@ ID_DELE_POP_BOT = 4002
 
 
 class MainFrame(wx.Frame):
-	def __init__(self, parent, id, title, pos, size, control, fileList = None):
+	def __init__(self, parent, id, title, pos, size, control):
 		wx.Frame.__init__(self, parent, id, title, pos, size)
 		
 		self.control = control
@@ -41,7 +41,7 @@ class MainFrame(wx.Frame):
 		self.textBox = None
 		self.aboutBox = None
 		self.fileDialog = None
-		self.fileList = fileList
+		
 		self.selectedURLS = []
 		self.CreateStatusBar()
 		

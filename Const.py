@@ -2,6 +2,7 @@ import os
 import sys
 import pycurl
 
+
 DEBUG = 0
 
 VERSION = '0.1.1'
@@ -18,7 +19,7 @@ STAT_X = 5
 STAT_E = -1
 
 
-STAT_QUEUING = 'Queuing'
+STAT_QUEUEING = 'Queueing'
 STAT_DOWNLOADING = 'Downloading'
 STAT_DONE = 'Completed'
 STAT_COMPLETING = 'Completing'
@@ -28,7 +29,7 @@ STAT_ERROR = 'Error'
 
 
 downloadStatus = {}
-downloadStatus[STAT_Q] = STAT_QUEUING
+downloadStatus[STAT_Q] = STAT_QUEUEING
 downloadStatus[STAT_D] = STAT_DOWNLOADING
 downloadStatus[STAT_C] = STAT_COMPLETING
 downloadStatus[STAT_S] = STAT_STOPPED

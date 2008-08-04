@@ -39,10 +39,10 @@ class LRGParser(HTMLParser):
 			linkProp = {}			 
 			for att in attrs:
 				linkProp[str(att[0])] = str(att[1])
-			print 'linkProp ', linkProp
+			#print 'linkProp ', linkProp
 			if (linkProp.has_key('style') and linkProp.has_key('target') and linkProp.has_key('href')):
-				print 'style', linkProp['style']
-				print 'target', linkProp['target']
+				#print 'style', linkProp['style']
+				#print 'target', linkProp['target']
 				if (linkProp['style'].find(RAPIDSHARE_STYLE) != 1 and linkProp['target'].find(RAPIDSHARE_TARGET) != -1):
 					#print 'adding ', linkProp['href']
 					self.linkList.append(str(linkProp['href']))

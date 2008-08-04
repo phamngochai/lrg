@@ -12,5 +12,8 @@ D Save downloaded list
 D Redownload
 - Reset password, change rp account
 - Speed limit
-- Color line
+D Color line
 - change download order
+- Separate setting and queueing file
+- Ctrl+A, Del...
+- Percentage

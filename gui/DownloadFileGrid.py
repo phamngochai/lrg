@@ -5,6 +5,25 @@ from Const import *
 from decimal import *
 
 
+BG_QUEUEING = wx.Color(255, 255, 255)
+BG_DOWNLOADING = wx.Color(204, 230, 255)
+BG_DONE = wx.Color(153, 204, 255)
+BG_COMPLETING = wx.Color(204, 255, 153)
+BG_STOPPED = wx.Color(255, 255, 204)
+BG_EXIST = wx.Color(0, 214, 71)
+BG_ERROR = wx.Color(235, 78, 0)
+
+colorList = {}
+colorList[STAT_Q] = BG_QUEUEING
+colorList[STAT_D] = BG_DOWNLOADING
+colorList[STAT_C] = BG_COMPLETING
+colorList[STAT_S] = BG_STOPPED
+colorList[STAT_Z] = BG_DONE
+colorList[STAT_X] = BG_EXIST
+colorList[STAT_E] = BG_ERROR
+
+
+
 class DownloadFileGrid(wx.grid.Grid):
 	def __init__(self, parent, id, panelPos, popupMenuCallback = None):
 		wx.grid.Grid.__init__(self, parent, wx.ID_ANY)
@@ -80,8 +99,13 @@ class DownloadFileGrid(wx.grid.Grid):
 				if (updateType != None):
 					for col in updateType:
 						self.SetCellValue(i, col, downloadFile.getInfoByCol(col))
+						if (col == FILESTATUS_COL):
+							tmpAttr = wx.grid.GridCellAttr()
+							tmpAttr.SetBackgroundColour(colorList[downloadFile.getStatus()])
+							#print 'Color ', colorList[downloadFile.getStatus()]
+							self.SetRowAttr(i, tmpAttr)
+						
 				break
-			
 					
 		self.ForceRefresh()
 		
@@ -100,6 +124,12 @@ class DownloadFileGrid(wx.grid.Grid):
 		self.SetCellValue(nbRow, PERCENT_COL, downloadFile.getInfoByCol(PERCENT_COL))
 		self.SetCellValue(nbRow, RETRY_COL, downloadFile.getInfoByCol(RETRY_COL))
 		self.SetCellValue(nbRow, FILEURL_COL, downloadFile.getInfoByCol(FILEURL_COL))
+		tmpAttr = wx.grid.GridCellAttr()
+		tmpAttr.SetBackgroundColour(colorList[downloadFile.getStatus()])
+		#print 'Color ', colorList[downloadFile.getStatus()]
+		
+		self.SetRowAttr(nbRow, tmpAttr)
+
 		self.ForceRefresh()
 		
 	def removeDownloadFile(self, downloadFile):
