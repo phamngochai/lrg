@@ -209,6 +209,10 @@ class Control(threading.Thread):
 
 		
 	def run(self):
+	
+		if (self.mainFrame == None):
+			print 'No mainFrame found, cannot continue'
+			sys.exit()
 		
 		multiHandler = pycurl.CurlMulti()
 		multiHandler.handles = []
