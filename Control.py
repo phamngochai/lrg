@@ -61,7 +61,7 @@ class Control(threading.Thread):
 
 	#Add an url to the queueing list
 	def addURL(self, fileURL):
-		if (not self.toContinue):
+		if (not self.toContinue or str(fileURL).strip() == ''):
 			return
 		downloadFile = DownloadFile(fileURL)
 		Config.settings.currentId += 1

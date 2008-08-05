@@ -6,6 +6,7 @@ from PanelBot import PanelBot
 from TextBox import TextBox
 from ConfigBox import ConfigBox
 from AboutBox import AboutBox
+from DownloadFilePropBox import DownloadFilePropBox
 from Const import *
 import threading
 
@@ -26,6 +27,7 @@ ID_STOP_POP_TOP = 3001
 ID_CONT_POP_TOP = 3002
 ID_RESE_POP_TOP = 3003
 ID_DELE_POP_TOP = 3004
+ID_PROP_POP_TOP = 3005
 
 
 ID_REDO_POP_BOT = 4001
@@ -41,6 +43,7 @@ class MainFrame(wx.Frame):
 		self.textBox = None
 		self.aboutBox = None
 		self.fileDialog = None
+		self.downloadFilePropBox = None
 		
 		self.selectedURLS = []
 		self.CreateStatusBar()
@@ -78,7 +81,7 @@ class MainFrame(wx.Frame):
 		self.topPopupMenu.Append(ID_CONT_POP_TOP, '&Start/Continue', 'Start/Continue')
 		self.topPopupMenu.Append(ID_RESE_POP_TOP, '&Reset', 'Reset')
 		self.topPopupMenu.Append(ID_DELE_POP_TOP, '&Delete', 'Delete')
-		
+		self.topPopupMenu.Append(ID_PROP_POP_TOP, '&Properties', 'Properties')
 		
 		self.botPopupMenu = wx.Menu()
 		self.botPopupMenu.Append(ID_REDO_POP_BOT, '&Redownload', 'Redownload')
@@ -95,9 +98,11 @@ class MainFrame(wx.Frame):
 		wx.EVT_MENU(self, ID_STOP_POP_TOP, self.onStop)
 		wx.EVT_MENU(self, ID_CONT_POP_TOP, self.onContinue)
 		wx.EVT_MENU(self, ID_RESE_POP_TOP, self.onResetDownload)		
-		wx.EVT_MENU(self, ID_DELE_POP_TOP, self.onDeleteTop)		
+		wx.EVT_MENU(self, ID_DELE_POP_TOP, self.onDeleteTop)
+		wx.EVT_MENU(self, ID_PROP_POP_TOP, self.onDownloadFileProp)		
 		wx.EVT_MENU(self, ID_REDO_POP_BOT, self.onRedownload)
 		wx.EVT_MENU(self, ID_DELE_POP_BOT, self.onDeleteBot)
+		
 		
 		wx.EVT_MENU(self, ID_HELP, self.onHelp)		
 		
@@ -158,6 +163,10 @@ class MainFrame(wx.Frame):
 		#print event
 		self.selectedURLS = selectedURLS
 		if (PanelPos == PANEL_TOP):
+			if (len(self.selectedURLS)  == 1):
+				self.topPopupMenu.Enable(ID_PROP_POP_TOP, True)
+			else:
+				self.topPopupMenu.Enable(ID_PROP_POP_TOP, False)
 			self.panelTop.PopupMenu(self.topPopupMenu, position)
 		else:
 			self.panelBot.PopupMenu(self.botPopupMenu, position)
@@ -212,13 +221,23 @@ class MainFrame(wx.Frame):
 					
 
 	def onRedownload(self, event):
-		pass
+		for fileURL in self.selectedURLS:
+			self.control.addURL(fileURL)
 					
 
 	def onDeleteBot(self, event):
 		for fileURL in self.selectedURLS:
 			self.control.deleteDownloadBot(fileURL)
-					
+
+	def onDownloadFileProp(self, event):					
+		if (self.downloadFilePropBox):
+			self.downloadFilePropBox.Show(True)
+		else:
+			#print 'self.selectedURLS ', self.selectedURLS
+			downloadFile = self.control.downloadFileList.getDownloadFileByFileURL(self.selectedURLS[0])
+			self.downloadFilePropBox = DownloadFilePropBox(self, wx.ID_ANY, 'Properties', downloadFile)
+		
+	
 		
 	def saveSettings(self):
 		print 'save setting'
