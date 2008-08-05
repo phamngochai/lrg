@@ -45,7 +45,7 @@ class MainFrame(wx.Frame):
 		self.fileDialog = None
 		self.downloadFilePropBox = None
 		
-		self.selectedURLS = []
+		self.selectedIds = []
 		self.CreateStatusBar()
 		
 		self.fileMenu = wx.Menu()
@@ -193,8 +193,8 @@ class MainFrame(wx.Frame):
 
 
 	def onStop(self, event):
-		for fileURL in self.selectedURLS:
-			self.control.stopDownload(fileURL)
+		for id in self.selectedIds:
+			self.control.stopDownload(id)
 			
 			
 	def onStartAll(self, event):
@@ -202,18 +202,18 @@ class MainFrame(wx.Frame):
 		
 		
 	def onContinue(self, event):
-		for fileURL in self.selectedURLS:
-			self.control.continueDownload(fileURL)
+		for id in self.selectedIds:
+			self.control.continueDownload(id)
 
 
 	def onResetDownload(self, event):
-		for fileURL in self.selectedURLS:
-			self.control.resetDownload(fileURL)
+		for id in self.selectedIds:
+			self.control.resetDownload(id)
 
 
 	def onDeleteTop(self, event):
-		for fileURL in self.selectedURLS:
-			self.control.deleteDownloadTop(fileURL)
+		for id in self.selectedIds:
+			self.control.deleteDownloadTop(id)
 		
 		
 	def onDeleteAll(self, event):
@@ -221,20 +221,20 @@ class MainFrame(wx.Frame):
 					
 
 	def onRedownload(self, event):
-		for fileURL in self.selectedURLS:
-			self.control.addURL(fileURL)
+		for id in self.selectedIds:
+			self.control.addURL(id)
 					
 
 	def onDeleteBot(self, event):
-		for fileURL in self.selectedURLS:
-			self.control.deleteDownloadBot(fileURL)
+		for id in self.selectedIds:
+			self.control.deleteDownloadBot(id)
 
 	def onDownloadFileProp(self, event):					
 		if (self.downloadFilePropBox):
 			self.downloadFilePropBox.Show(True)
 		else:
 			#print 'self.selectedURLS ', self.selectedURLS
-			downloadFile = self.control.downloadFileList.getDownloadFileByFileURL(self.selectedURLS[0])
+			downloadFile = self.control.downloadFileList.getDownloadFileById(self.selectedIds[0])
 			self.downloadFilePropBox = DownloadFilePropBox(self, wx.ID_ANY, 'Properties', downloadFile)
 		
 	

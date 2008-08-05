@@ -2,9 +2,13 @@
 import wx
 from Const import *
 
+ID_OK_BUT = 90001
+ID_CANCEL_BUT = 90002
+
 class DownloadFilePropBox(wx.Frame):
 	def __init__(self, parent, id, title, downloadFile):
 		wx.Frame.__init__(self, parent, id, title, size = (300, 200))
+		self.parent = parent
 		self.downloadFile = downloadFile
 		self.panel = wx.Panel(self)
 		self.mainSizer = wx.BoxSizer(wx.VERTICAL)	
@@ -29,14 +33,34 @@ class DownloadFilePropBox(wx.Frame):
 
 		tmpRetryText = 'Retry: ' + str(self.downloadFile.getRetry())
 		self.retryText = wx.StaticText(self.panel, wx.ID_ANY, tmpRetryText)
+
+		self.buttonsSizer = wx.BoxSizer(wx.HORIZONTAL)
+		self.okBut = wx.Button(self.panel, ID_OK_BUT, 'OK')
+		wx.EVT_BUTTON(self, ID_OK_BUT, self.onClickOK)
+		self.cancelBut = wx.Button(self.panel, ID_CANCEL_BUT, 'Cancel')
+		wx.EVT_BUTTON(self, ID_CANCEL_BUT, self.onClickCancel)		
+		self.buttonsSizer.Add(self.okBut, 1, wx.EXPAND)	
+		self.buttonsSizer.Add(self.cancelBut, 1, wx.EXPAND)
+		
+		
+		
 		
 		self.mainSizer.Add(self.urlSizer, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.fileNameText, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.fileSizeText, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.completedText, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.retryText, 0, wx.ALIGN_CENTER)
+		self.mainSizer.Add(self.buttonsSizer, 0, wx.ALIGN_CENTER)
 		
 		self.panel.SetSizerAndFit(self.mainSizer)
 		self.Center(wx.BOTH)
 		self.Fit()
 		self.Show(True)
+		
+	def onClickOK(self, event):
+		self.downloadFile.setFileURL(self.urlField.GetValue())
+		self.parent.update(self.downloadFile, [FILEURL_COL, FILESTATUS_COL, RETRY_COL])
+		self.Destroy()
+				
+	def onClickCancel(self, event):
+		self.Destroy()

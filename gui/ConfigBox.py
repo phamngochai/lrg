@@ -1,9 +1,9 @@
 import wx
 from ConfigUtils import *
 
-ID_INDIR_BUT = 1001
-ID_OK_BUT = 2001
-ID_CLOSE_BUT = 2002
+ID_INDIR_BUT = 81001
+ID_OK_BUT = 82001
+ID_CLOSE_BUT = 82002
 PADDING = 10
 
 
