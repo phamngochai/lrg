@@ -43,56 +43,43 @@ class DownloadFileList:
 		self.downloadFileListLock.release()
 		return None
 
-	def removeFileFromDownloadList(self, removeDownloadFile, moveToCompleted = None):
-		#print '----------------------------- removing ', removeDownloadFile
+
+	def deleteDownloadFileFromDownloadList(self, id, moveToCompleted = None):			
 		i = 0
 		self.downloadFileListLock.acquire()
 		for downloadFile in self.downloadFileList:
-			if (downloadFile.getFileURL() == removeDownloadFile.getFileURL()):
+			if (downloadFile.getId() == id):
 				if (moveToCompleted == None):
 					del self.downloadFileList[i]
 				else:
 					downloadFile = self.downloadFileList.pop(i)
+					self.completedFileListLock.acquire()
 					self.completedFileList.append(downloadFile)
+					self.completedFileListLock.release()
 				break
 			i += 1
-		self.downloadFileListLock.release()
+		self.downloadFileListLock.release()	
+		
+		
 			
-	def removeFileFromCompletedList(self, removeDownloadFile, moveToDownload = None):
-		#print '----------------------------- removing ', removeDownloadFile
+	def deleteDownloadFileFromCompletedList(self, id, moveToDownload = None):
 		i = 0
 		self.completedFileListLock.acquire()
 		for downloadFile in self.completedFileList:
-			if (downloadFile.getFileURL() == removeDownloadFile.getFileURL()):
-				if (moveToCompleted == None):
+			if (downloadFile.getId() == id):
+				if (moveToDownload == None):
 					del self.completedFileList[i]
 				else:
 					downloadFile = self.completedFileList.pop(i)
+					self.downloadFileListLock.acquire()
 					self.downloadFileList.append(downloadFile)
+					self.downloadFileListLock.release()
 				break
 			i += 1
 		self.completedFileListLock.release()
+		
 			
-			
-	def removeFileURLFromDownloadList(self, fileURL):
-		i = 0
-		self.downloadFileListLock.acquire()
-		for downloadFile in self.downloadFileList:
-			if (downloadFile.getFileURL() == fileURL):
-				del self.downloadFileList[i]
-				break
-			i += 1
-		self.downloadFileListLock.release()
-			
-	def removeFileURLFromCompletedList(self, fileURL):
-		i = 0
-		self.completedFileListLock.acquire()
-		for downloadFile in self.completedFileList:
-			if (downloadFile.getFileURL() == fileURL):
-				del self.completedFileList[i] 
-				break
-			i += 1
-		self.completedFileListLock.release()
+
 			
 	def getNumberOfDownloadingFile(self):
 		i = 0
@@ -102,6 +89,7 @@ class DownloadFileList:
 				i += 1
 		self.downloadFileListLock.release()
 		return i
+		
 
 	def getNumberOfQueueingFile(self):
 		i = 0
@@ -112,6 +100,7 @@ class DownloadFileList:
 		self.downloadFileListLock.release()
 		return i
 
+
 	def resetStatus(self, status):
 		self.downloadFileListLock.acquire()
 		for downloadFile in self.downloadFileList:			
@@ -121,16 +110,18 @@ class DownloadFileList:
 				downloadFile.setErrorStr('')
 		self.downloadFileListLock.release()
 				
-	def getDownloadFileByFileURL(self, fileURL):
+				
+	def getDownloadFileById(self, id):
 		self.downloadFileListLock.acquire()
 		for downloadFile in self.downloadFileList:
-			if (downloadFile.getFileURL() == fileURL):
+			if (downloadFile.getId() == id):
 				self.downloadFileListLock.release()
 				return downloadFile
 		self.downloadFileListLock.release()
 		
-	def changeStatus(self, fileURL, status):
-		self.getDownloadFileByFileURL(fileURL).setStatus(status)
+		
+	def changeStatus(self, id, status):
+		self.getDownloadFileById(id).setStatus(status)
 		
 		
 	def emptyList(self):

@@ -20,11 +20,8 @@ class PanelTop(wx.Panel):
 	def addDownloadFile(self, downloadFile):
 		self.downloadFileGrid.addDownloadFile(downloadFile)
 		
-	def deleteDownloadFile(self, downloadFile):
-		self.downloadFileGrid.removeDownloadFile(downloadFile)
-		
-	def deleteDownloadFileURL(self, fileURL):
-		self.downloadFileGrid.removeDownloadFileURL(fileURL)
+	def deleteDownloadFile(self, id):
+		self.downloadFileGrid.deleteDownloadFile(id)
 		
 	def deleteAllDownloadFile(self):
 		self.downloadFileGrid.removeAllDownloadFile()

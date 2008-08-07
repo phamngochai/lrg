@@ -189,7 +189,7 @@ class DownloadFile:
 		
 		
 	def getInfoByCol(self, colId):
-		if (colId == ID_COL):
+		if (colId == FILEID_COL):
 			return str(self.getId())
 		elif (colId == FILENAME_COL):
 			return str(self.getFileName())

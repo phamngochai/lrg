@@ -18,3 +18,4 @@ D Color line
 - Ctrl+A, Del...
 - Percentage
 - Download dir button
+- Apply sqve

@@ -109,18 +109,18 @@ class Control(threading.Thread):
 			return None
 			
 	#reset the download file		
-	def resetDownload(self, fileURL = None):
-		if (fileURL):
+	def resetDownload(self, id = None):
+		if (id):
 			found = False
 			#self.downloadFileList.changeStatus(fileURL, STAT_S)
 			for downloadFileControl in self.downloadFileControlList:
-				if (downloadFileControl.getDownloadFile().getFileURL() == fileURL):					
+				if (downloadFileControl.getDownloadFile().getId() == id):					
 					downloadFileControl.resetSettings()
-					self.mainFrame.update(downloadFileControl.getDownloadFile(), updateType = [FILESTATUS_COL])
-					found = True					
+					self.mainFrame.update(downloadFileControl.getDownloadFile(), updateType = [FILESTATUS_COL, RETRY_COL])
+					found = True
 					break
 			if (not found):
-				downloadFile = self.downloadFileList.getDownloadFileByFileURL(fileURL)
+				downloadFile = self.downloadFileList.getDownloadFileById(id)
 				#downloadFile.setStatus(STAT_S)
 				downloadFile.resetInfo()
 				self.mainFrame.update(downloadFile, updateType = [FILESTATUS_COL])
@@ -136,19 +136,19 @@ class Control(threading.Thread):
 		
 	
 	#stop the download
-	def stopDownload(self, fileURL = None):
-		if (fileURL):
+	def stopDownload(self, id = None):
+		if (id):
 			found = False
 			#self.downloadFileList.changeStatus(fileURL, STAT_S)
 			for downloadFileControl in self.downloadFileControlList:
-				if (downloadFileControl.getDownloadFile().getFileURL() == fileURL):					
+				if (downloadFileControl.getDownloadFile().getId() == id):					
 					downloadFileControl.stop()
 					self.mainFrame.update(downloadFileControl.getDownloadFile(), updateType = [FILESTATUS_COL])
 					found = True
 					downloadFileControl.reset()
 					break
 			if (not found):
-				downloadFile = self.downloadFileList.getDownloadFileByFileURL(fileURL)
+				downloadFile = self.downloadFileList.getDownloadFileById(id)
 				downloadFile.setStatus(STAT_S)
 				self.mainFrame.update(downloadFile, updateType = [FILESTATUS_COL])
 				
@@ -163,9 +163,9 @@ class Control(threading.Thread):
 				downloadFileControl.reset()
 				
 	
-	def continueDownload(self, fileURL = None):		
-		if (fileURL):
-			downloadFile = self.downloadFileList.getDownloadFileByFileURL(fileURL)
+	def continueDownload(self, id = None):		
+		if (id):
+			downloadFile = self.downloadFileList.getDownloadFileById(id)
 			if (downloadFile.getStatus() != STAT_D):
 				downloadFile.setStatus(STAT_Q)
 				self.mainFrame.update(downloadFile, updateType = [FILESTATUS_COL])
@@ -177,34 +177,36 @@ class Control(threading.Thread):
 		self.isStopped = False
 		
 		
-	def deleteDownloadTop(self, fileURL = None):
-		if (fileURL):
+	def deleteDownloadTop(self, id = None):
+		print 'deleteDownloadTop ', id
+		if (id):
 			found = False
 			for downloadFileControl in self.downloadFileControlList:
-				if (downloadFileControl.getDownloadFile().getFileURL() == fileURL):
+				if (downloadFileControl.getDownloadFile().getId() == id):
 					found = True
-					self.mainFrame.deleteDownloadFileFromList(downloadFileControl.getDownloadFile(), PANEL_TOP)
-					self.downloadFileList.removeFileFromDownloadList(downloadFileControl.getDownloadFile())
+					self.mainFrame.deleteDownloadFileFromList(downloadFileControl.getDownloadFile().getId(), PANEL_TOP)
 					downloadFileControl.delete()
+					self.downloadFileList.deleteDownloadFileFromDownloadList(downloadFileControl.getDownloadFile().getId())					
 			if (not found):
-				self.downloadFileList.removeFileURLFromDownloadList(fileURL)
-				self.mainFrame.deleteFileURLFromList(fileURL, PANEL_TOP)
+				self.downloadFileList.deleteDownloadFileFromDownloadList(id)
+				self.mainFrame.deleteDownloadFileFromList(id, PANEL_TOP)
 		else:
 			self.isStopped = True
 			for downloadFileControl in self.downloadFileControlList:
-				self.mainFrame.deleteDownloadFileFromList(downloadFileControl.getDownloadFile(), PANEL_TOP)
-				self.downloadFileList.removeFileFromDownloadList(downloadFileControl.getDownloadFile())
+				self.mainFrame.deleteDownloadFileFromList(downloadFileControl.getDownloadFile().getId(), PANEL_TOP)
 				downloadFileControl.delete()
+				self.downloadFileList.deleteDownloadFileFromDownloadList(downloadFileControl.getDownloadFile().getId())				
 			self.downloadFileList.emptyList()
 			self.mainFrame.emptyList(PANEL_TOP)
 		
 		
-	def deleteDownloadBot(self, fileURL = None):
-		if (fileURL):
-			self.mainFrame.deleteFileURLFromList(fileURL, PANEL_BOT)
-			self.downloadFileList.removeFileURLFromCompletedList(fileURL)
+	def deleteDownloadBot(self, id = None):
+		print 'deleteDownloadBot ', id
+		if (id):
+			self.mainFrame.deleteDownloadFileFromList(id, PANEL_BOT)
+			self.downloadFileList.deleteDownloadFileFromCompletedList(id)
 		else:
-			self.mainFrame.emptyList(PANEL_BOT)		
+			self.mainFrame.emptyList(PANEL_BOT)
 		
 
 		
@@ -360,7 +362,7 @@ class Control(threading.Thread):
 			return
 		self.mainFrame.deleteDownloadFileFromList(downloadFile, PANEL_TOP)
 		self.mainFrame.addDownloadFileToList(downloadFile, PANEL_BOT)
-		self.downloadFileList.removeFileFromDownloadList(downloadFile, True)
+		self.downloadFileList.deleteDownloadFileFromDownloadList(downloadFile.getId(), True)
 	
 	def report(self, downloadFile, updateType):
 		if (not self.toContinue):

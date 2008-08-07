@@ -51,6 +51,7 @@ class DownloadFileGrid(wx.grid.Grid):
 		self.SetColLabelValue(FILEURL_COL, "Address")
 		self.SetColLabelValue(FILEERROR_COL, "Error")
 		
+		self.SetColSize(FILEID_COL,10)
 		self.SetColSize(FILENAME_COL, FILENAME_COL_SIZE)
 		self.SetColSize(FILESTATUS_COL, FILESTATUS_COL_SIZE)
 		self.SetColSize(FILEURL_COL, FILEURL_COL_SIZE)
@@ -64,7 +65,7 @@ class DownloadFileGrid(wx.grid.Grid):
 		self.SetColAttr(FILECOMP_COL, self.alignRight)
 		
 		
-		self.Bind(wx.grid.EVT_GRID_CELL_RIGHT_CLICK, self.onSelectedURLs)
+		self.Bind(wx.grid.EVT_GRID_CELL_RIGHT_CLICK, self.onSelectedIds)
 		
 	#def update(self, downloadFile):
 		#wx.CallAfter(self.realUpdate, downloadFile)
@@ -75,12 +76,11 @@ class DownloadFileGrid(wx.grid.Grid):
 		botRight = self.GetSelectionBlockBottomRight()
 		#print '--------'
 		#print topLeft
-		#print botRight
-		
+		#print botRight		
 		for i in range(len(topLeft)):
 			for j in range(topLeft[i][0], botRight[i][0] + 1):
-				selectedIds.append(str(self.GetCellValue(j, ID_COL)))
-				
+				selectedIds.append(int(str(self.GetCellValue(j, FILEID_COL))))				
+		
 		return selectedIds
 		
 		
@@ -95,7 +95,7 @@ class DownloadFileGrid(wx.grid.Grid):
 		#print 'UPDATE CALL', downloadFile
 		
 		for i in range(0, self.GetNumberRows()):
-			if (self.GetCellValue(i, ID_COL) == downloadFile.getInfoByCol(ID_COL)):
+			if (self.GetCellValue(i, FILEID_COL) == downloadFile.getInfoByCol(FILEID_COL)):
 				if (updateType != None):
 					for col in updateType:
 						self.SetCellValue(i, col, downloadFile.getInfoByCol(col))
@@ -117,7 +117,7 @@ class DownloadFileGrid(wx.grid.Grid):
 		nbRow = self.GetNumberRows()
 		self.InsertRows(nbRow)
 		#print 'nbRow', nbRow
-		self.SetCellValue(nbRow, ID_COL, downloadFile.getInfoByCol(ID_COL))
+		self.SetCellValue(nbRow, FILEID_COL, downloadFile.getInfoByCol(FILEID_COL))
 		self.SetCellValue(nbRow, FILENAME_COL, downloadFile.getInfoByCol(FILENAME_COL))
 		self.SetCellValue(nbRow, FILESTATUS_COL, downloadFile.getInfoByCol(FILESTATUS_COL))
 		self.SetCellValue(nbRow, FILESIZE_COL, downloadFile.getInfoByCol(FILESIZE_COL))
@@ -133,16 +133,16 @@ class DownloadFileGrid(wx.grid.Grid):
 
 		self.ForceRefresh()
 		
-	def removeDownloadFile(self, downloadFile):
+	def deleteDownloadFile(self, id):
 		for i in range(0, self.GetNumberRows()):
-			if (self.GetCellValue(i, ID_COL) == downloadFile.getInfoByCol(ID_COL)): 
+			if (self.GetCellValue(i, FILEID_COL) == str(id)): 
 				self.DeleteRows(i)
 				break
 		self.ForceRefresh()
 		
 	def removeDownloadFileId(self, fileId):
 		for i in range(0, self.GetNumberRows()):
-			if (self.GetCellValue(i, ID_COL) == fileId):
+			if (self.GetCellValue(i, FILEID_COL) == fileId):
 				self.DeleteRows(i)
 				break
 		self.ForceRefresh()

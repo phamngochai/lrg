@@ -158,12 +158,12 @@ class MainFrame(wx.Frame):
 		else:
 			self.aboutBox = AboutBox(self, wx.ID_ANY, 'About')
 		
-	def popupMenuCallback(self, selectedURLS, position, PanelPos):
+	def popupMenuCallback(self, selectedIds, position, PanelPos):
 		#print selectedRows
 		#print event
-		self.selectedURLS = selectedURLS
+		self.selectedIds = selectedIds
 		if (PanelPos == PANEL_TOP):
-			if (len(self.selectedURLS)  == 1):
+			if (len(self.selectedIds)  == 1):
 				self.topPopupMenu.Enable(ID_PROP_POP_TOP, True)
 			else:
 				self.topPopupMenu.Enable(ID_PROP_POP_TOP, False)
@@ -212,6 +212,7 @@ class MainFrame(wx.Frame):
 
 
 	def onDeleteTop(self, event):
+		print self.selectedIds
 		for id in self.selectedIds:
 			self.control.deleteDownloadTop(id)
 		
@@ -237,11 +238,6 @@ class MainFrame(wx.Frame):
 			downloadFile = self.control.downloadFileList.getDownloadFileById(self.selectedIds[0])
 			self.downloadFilePropBox = DownloadFilePropBox(self, wx.ID_ANY, 'Properties', downloadFile)
 		
-	
-		
-	def saveSettings(self):
-		print 'save setting'
-
 		
 		
 	def onExit(self, event):
@@ -259,20 +255,14 @@ class MainFrame(wx.Frame):
 		if (panelPos == PANEL_TOP):
 			wx.CallAfter(self.panelTop.addDownloadFile, downloadFile)
 		else:
-			wx.CallAfter(self.panelBot.addDownloadFile, downloadFile)
-		
+			wx.CallAfter(self.panelBot.addDownloadFile, downloadFile)		
 
-	def deleteFileURLFromList(self, fileURL, panelPos):
+	def deleteDownloadFileFromList(self, id, panelPos):
 		if (panelPos == PANEL_TOP):
-			wx.CallAfter(self.panelTop.deleteDownloadFileURL, fileURL)
+			wx.CallAfter(self.panelTop.deleteDownloadFile, id)
 		else:
-			wx.CallAfter(self.panelBot.deleteDownloadFileURL, fileURL)
+			wx.CallAfter(self.panelBot.deleteDownloadFile, id)
 		
-	def deleteDownloadFileFromList(self, downloadFile, panelPos):
-		if (panelPos == PANEL_TOP):
-			wx.CallAfter(self.panelTop.deleteDownloadFile, downloadFile)
-		else:
-			wx.CallAfter(self.panelBot.deleteDownloadFile, downloadFile)
 		
 	def emptyList(self, panelPos):
 		if (panelPos == PANEL_TOP):		
