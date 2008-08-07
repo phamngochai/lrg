@@ -63,7 +63,7 @@ class Control(threading.Thread):
 	def addURL(self, fileURL):
 		if (not self.toContinue or str(fileURL).strip() == ''):
 			return
-		downloadFile = DownloadFile(fileURL)		
+		downloadFile = DownloadFile(str(fileURL).strip())
 		downloadFile.setId(Config.getId())
 		self.downloadFileList.addQueueingFile(downloadFile)		
 		self.mainFrame.addDownloadFileToList(downloadFile, PANEL_TOP)

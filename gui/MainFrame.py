@@ -174,10 +174,11 @@ class MainFrame(wx.Frame):
 		
 	def enterLinks(self, links):
 		#print links
-		urlList = links.split("\n")
+		urlList = links.split()
 		for url in urlList:
+			#for url in urls.split(" "):
 			if (url.strip() != ''):
-				self.control.addURL(url)
+				self.control.addURL(url.strip())
 
 		
 		

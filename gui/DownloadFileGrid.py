@@ -41,6 +41,7 @@ class DownloadFileGrid(wx.grid.Grid):
 		self.alignRight = wx.grid.GridCellAttr()
 		self.alignRight.SetAlignment(wx.ALIGN_RIGHT, wx.ALIGN_CENTRE)
 		
+		self.SetColMinimalAcceptableWidth(0)
 		self.SetColMinimalWidth(FILEID_COL, 0)
 		self.AutoSizeColumn(FILEID_COL, False)
 		self.SetColSize(FILEID_COL, 0)		
