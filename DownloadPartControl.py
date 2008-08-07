@@ -68,7 +68,7 @@ class DownloadPartControl:
 			self.curlClass.setFormInfo(self.downloadPart.getFileURL())
 			
 			if (Config.checkServerURL(self.downloadPart.getFileURL(), RAPIDSHARE)):
-				print 'DownloadPartControl Setting cookie ', self.downloadPart.getId()
+				#print 'DownloadPartControl Setting cookie ', self.downloadPart.getId()
 				self.curlClass.setCookie()
 				
 			self.curlClass.setProcessBody(self.writeBody)

@@ -5,7 +5,7 @@ import cPickle
 from Const import *
 from Settings import Settings
 from math import *
-
+import threading
 
 class Config:
 
@@ -54,12 +54,19 @@ class Config:
 			Config.settings.rapidsharePassword = RAPIDSHARE_PASSWORD
 			Config.settings.currentId = CURRENT_ID
 			Config.settings.cookie = None
+
+		Config.idLock = threading.Lock()	
 	
 	def save():
 		settingsFile = open(SETTINGS_FILE, 'wb') 
 		cPickle.dump(Config.settings, settingsFile)
 		settingsFile.close()
 
+	def getId():
+		Config.idLock.acquire()
+		Config.settings.currentId += 1
+		Config.idLock.release()
+		return Config.settings.currentId
 	
 	def getFileNameFromURL(fileURL):
 		slashPos = fileURL.rfind('/')
@@ -159,7 +166,7 @@ class Config:
 			return int (fileSize - (partNo * partSize))
 		
 	
-	
+	getId = staticmethod(getId)
 	getFileNameFromURL = staticmethod(getFileNameFromURL)
 	checkExistence = staticmethod(checkExistence)
 	getTmpFile = staticmethod(getTmpFile)
@@ -169,3 +176,4 @@ class Config:
 	checkServerURL = staticmethod(checkServerURL)
 	getPartSize = staticmethod(getPartSize)
 	getLinkType = staticmethod(getLinkType)
+	

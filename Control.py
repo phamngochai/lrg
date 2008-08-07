@@ -63,9 +63,8 @@ class Control(threading.Thread):
 	def addURL(self, fileURL):
 		if (not self.toContinue or str(fileURL).strip() == ''):
 			return
-		downloadFile = DownloadFile(fileURL)
-		Config.settings.currentId += 1
-		downloadFile.setId(Config.settings.currentId)
+		downloadFile = DownloadFile(fileURL)		
+		downloadFile.setId(Config.getId())
 		self.downloadFileList.addQueueingFile(downloadFile)		
 		self.mainFrame.addDownloadFileToList(downloadFile, PANEL_TOP)
 	
@@ -76,13 +75,19 @@ class Control(threading.Thread):
 			#print 'Stopping ', downloadFileControl.getDownloadFile().getId()
 			downloadFileControl.stop()
 			#print 'Stopping Done'
-		queueingFile = open(Config.settings.queueingListFile, 'wb')
-		self.downloadFileList.unsetLock()
-		cPickle.dump(self.downloadFileList, queueingFile, cPickle.HIGHEST_PROTOCOL)
-		queueingFile.close()
+		
+		self.downloadFileList.unsetLock()		
+		self.saveQueueingFiles()
 		#for downloadFile in self.downloadFileList.getList():
 			#print downloadFile
 		Config.save()
+		
+	#this is dangerous!!!
+	def saveQueueingFiles(self):
+		queueingFile = open(Config.settings.queueingListFile, 'wb')
+		cPickle.dump(self.downloadFileList, queueingFile, cPickle.HIGHEST_PROTOCOL)
+		queueingFile.close()
+
 	
 	#add a curl to the curl list
 	def addCurlObject(self, curlObject):
@@ -360,7 +365,7 @@ class Control(threading.Thread):
 	def finishFile(self, downloadFile):
 		if (not self.toContinue):
 			return
-		self.mainFrame.deleteDownloadFileFromList(downloadFile, PANEL_TOP)
+		self.mainFrame.deleteDownloadFileFromList(downloadFile.getId(), PANEL_TOP)
 		self.mainFrame.addDownloadFileToList(downloadFile, PANEL_BOT)
 		self.downloadFileList.deleteDownloadFileFromDownloadList(downloadFile.getId(), True)
 	

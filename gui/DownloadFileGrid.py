@@ -40,7 +40,12 @@ class DownloadFileGrid(wx.grid.Grid):
 		self.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_CENTRE)
 		self.alignRight = wx.grid.GridCellAttr()
 		self.alignRight.SetAlignment(wx.ALIGN_RIGHT, wx.ALIGN_CENTRE)
-		#self.SetColLabelValue(ID_COL, "Id")
+		
+		self.SetColMinimalWidth(FILEID_COL, 0)
+		self.AutoSizeColumn(FILEID_COL, False)
+		self.SetColSize(FILEID_COL, 0)		
+		
+		self.SetColLabelValue(FILEID_COL, "")
 		self.SetColLabelValue(FILENAME_COL, "File name")
 		self.SetColLabelValue(FILESPEED_COL, "Speed")
 		self.SetColLabelValue(FILESTATUS_COL, "Status")
@@ -50,8 +55,7 @@ class DownloadFileGrid(wx.grid.Grid):
 		self.SetColLabelValue(RETRY_COL, "Retry")
 		self.SetColLabelValue(FILEURL_COL, "Address")
 		self.SetColLabelValue(FILEERROR_COL, "Error")
-		
-		self.SetColSize(FILEID_COL,10)
+
 		self.SetColSize(FILENAME_COL, FILENAME_COL_SIZE)
 		self.SetColSize(FILESTATUS_COL, FILESTATUS_COL_SIZE)
 		self.SetColSize(FILEURL_COL, FILEURL_COL_SIZE)
@@ -134,8 +138,10 @@ class DownloadFileGrid(wx.grid.Grid):
 		self.ForceRefresh()
 		
 	def deleteDownloadFile(self, id):
+		print 'downloadFilegrid, deleteDownloadFile'
 		for i in range(0, self.GetNumberRows()):
 			if (self.GetCellValue(i, FILEID_COL) == str(id)): 
+				 
 				self.DeleteRows(i)
 				break
 		self.ForceRefresh()
