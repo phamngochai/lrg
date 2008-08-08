@@ -17,5 +17,5 @@ D Color line
 - Separate setting and queueing file
 - Ctrl+A, Del...
 - Percentage
-- Download dir button
+D Download dir button
 - Apply sqve

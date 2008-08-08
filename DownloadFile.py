@@ -1,6 +1,7 @@
 from ConfigUtils import *
 from Const import *
-
+import locale
+import math
 
 class DownloadFile:
 
@@ -76,7 +77,7 @@ class DownloadFile:
 			
 	def getPercentage(self):
 		if (self.fileSize != 0):
-			self.percentage = int(self.byteDownloaded / self.fileSize * 100)			
+			self.percentage = math.ceil((self.getByteDownloaded() / self.getFileSize()) * 100)
 		return self.percentage
 		
 	def getByteDownloaded(self):
@@ -198,10 +199,14 @@ class DownloadFile:
 		elif (colId == FILESPEED_COL):
 			return str("%.2f" % self.getSpeed())
 		elif (colId == FILESIZE_COL):
-			return str(self.getFileSize())
+			locale.setlocale(locale.LC_ALL, "")
+			num = math.ceil(self.getFileSize() / 1024)		
+			return str(locale.format("%d", num, True)) + ' KB'			
 		elif (colId == FILECOMP_COL):
-			return str(self.getByteDownloaded())
-		elif (colId == PERCENT_COL):
+			locale.setlocale(locale.LC_ALL, "")
+			num = math.ceil(self.getByteDownloaded() / 1024)		
+			return str(locale.format("%d", num, True)) + ' KB'
+		elif (colId == PERCENT_COL):			
 			return str(self.getPercentage())
 		elif (colId == RETRY_COL):
 			return str(self.getRetry())

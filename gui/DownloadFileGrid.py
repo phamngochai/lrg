@@ -5,22 +5,22 @@ from Const import *
 from decimal import *
 
 
-BG_QUEUEING = wx.Color(255, 255, 255)
-BG_DOWNLOADING = wx.Color(204, 230, 255)
-BG_DONE = wx.Color(153, 204, 255)
-BG_COMPLETING = wx.Color(204, 255, 153)
-BG_STOPPED = wx.Color(255, 255, 204)
-BG_EXIST = wx.Color(0, 214, 71)
-BG_ERROR = wx.Color(235, 78, 0)
+COLOR_QUEUEING = wx.Color(0x00, 0x00, 0x00)
+COLOR_DOWNLOADING = wx.Color(0x00, 0x00, 0xFF)
+COLOR_DONE = wx.Color(0x00, 0x80, 0x00)
+COLOR_COMPLETING = wx.Color(0x00, 0xCC, 0x00)
+COLOR_STOPPED = wx.Color(0x99, 0x99, 0x00)
+COLOR_EXIST = wx.Color(0xFF, 0x33, 0xCC)
+COLOR_ERROR = wx.Color(0xFF, 0x00, 0x00)
 
 colorList = {}
-colorList[STAT_Q] = BG_QUEUEING
-colorList[STAT_D] = BG_DOWNLOADING
-colorList[STAT_C] = BG_COMPLETING
-colorList[STAT_S] = BG_STOPPED
-colorList[STAT_Z] = BG_DONE
-colorList[STAT_X] = BG_EXIST
-colorList[STAT_E] = BG_ERROR
+colorList[STAT_Q] = COLOR_QUEUEING
+colorList[STAT_D] = COLOR_DOWNLOADING
+colorList[STAT_C] = COLOR_COMPLETING
+colorList[STAT_S] = COLOR_STOPPED
+colorList[STAT_Z] = COLOR_DONE
+colorList[STAT_X] = COLOR_EXIST
+colorList[STAT_E] = COLOR_ERROR
 
 
 
@@ -101,14 +101,16 @@ class DownloadFileGrid(wx.grid.Grid):
 		
 		for i in range(0, self.GetNumberRows()):
 			if (self.GetCellValue(i, FILEID_COL) == downloadFile.getInfoByCol(FILEID_COL)):
+				self.SetCellValue(i, PERCENT_COL, downloadFile.getInfoByCol(PERCENT_COL))
 				if (updateType != None):
 					for col in updateType:
-						self.SetCellValue(i, col, downloadFile.getInfoByCol(col))
+						self.SetCellValue(i, col, downloadFile.getInfoByCol(col))						
 						if (col == FILESTATUS_COL):
 							tmpAttr = wx.grid.GridCellAttr()
-							tmpAttr.SetBackgroundColour(colorList[downloadFile.getStatus()])
+							#tmpAttr.SetBackgroundColour(colorList[downloadFile.getStatus()])
+							tmpAttr.SetTextColour(colorList[downloadFile.getStatus()])
 							#print 'Color ', colorList[downloadFile.getStatus()]
-							self.SetRowAttr(i, tmpAttr)
+							self.SetRowAttr(i, tmpAttr)							
 						
 				break
 					
@@ -131,7 +133,8 @@ class DownloadFileGrid(wx.grid.Grid):
 		self.SetCellValue(nbRow, RETRY_COL, downloadFile.getInfoByCol(RETRY_COL))
 		self.SetCellValue(nbRow, FILEURL_COL, downloadFile.getInfoByCol(FILEURL_COL))
 		tmpAttr = wx.grid.GridCellAttr()
-		tmpAttr.SetBackgroundColour(colorList[downloadFile.getStatus()])
+		#tmpAttr.SetBackgroundColour(colorList[downloadFile.getStatus()])
+		tmpAttr.SetTextColour(colorList[downloadFile.getStatus()])
 		#print 'Color ', colorList[downloadFile.getStatus()]
 		
 		self.SetRowAttr(nbRow, tmpAttr)
@@ -139,7 +142,7 @@ class DownloadFileGrid(wx.grid.Grid):
 		self.ForceRefresh()
 		
 	def deleteDownloadFile(self, id):
-		print 'downloadFilegrid, deleteDownloadFile'
+		#print 'downloadFilegrid, deleteDownloadFile'
 		for i in range(0, self.GetNumberRows()):
 			if (self.GetCellValue(i, FILEID_COL) == str(id)): 
 				 

@@ -1,9 +1,12 @@
 import wx
 from ConfigUtils import *
 
-ID_INDIR_BUT = 81001
+ID_TMPDIR_BUT = 81001
+ID_INDIR_BUT = 81002
+
 ID_OK_BUT = 82001
 ID_CLOSE_BUT = 82002
+
 PADDING = 10
 
 
@@ -12,6 +15,9 @@ class ConfigBox(wx.Frame):
 
 	def __init__(self, parent, id, title):
 		wx.Frame.__init__(self, parent, id, title, style = wx.DEFAULT_FRAME_STYLE & ~ (wx.RESIZE_BORDER | wx.MINIMIZE_BOX | wx.RESIZE_BOX | wx.MAXIMIZE_BOX))
+		
+		self.incomingDirDialog = None
+		self.tmpDirDialog = None
 
 		self.splitter = wx.SplitterWindow(self, wx.ID_ANY)
 		self.splitter.SetBorderSize(0)
@@ -48,6 +54,7 @@ class ConfigBox(wx.Frame):
 		self.incomingDir = wx.TextCtrl(self.generalSettingsPanel, wx.ID_ANY)
 		self.incomingDir.SetValue(Config.settings.downloadDir)
 		self.incomingBut = wx.Button(self.generalSettingsPanel, ID_INDIR_BUT, 'Browse')
+		wx.EVT_BUTTON(self, ID_INDIR_BUT, self.onSelectIncomingDir)
 		
 		self.incomingDirSizer = wx.BoxSizer(wx.HORIZONTAL)
 		self.incomingDirSizer.Add(self.incomingDir, 3, wx.EXPAND, PADDING)
@@ -56,7 +63,8 @@ class ConfigBox(wx.Frame):
 		self.tmpDirLbl = wx.StaticText(self.generalSettingsPanel, wx.ID_ANY, 'Temporary directory:')
 		self.tmpDir = wx.TextCtrl(self.generalSettingsPanel, wx.ID_ANY)
 		self.tmpDir.SetValue(Config.settings.tmpDir)
-		self.tmpBut = wx.Button(self.generalSettingsPanel, ID_INDIR_BUT, 'Browse')
+		self.tmpBut = wx.Button(self.generalSettingsPanel, ID_TMPDIR_BUT, 'Browse')
+		wx.EVT_BUTTON(self, ID_TMPDIR_BUT, self.onSelectTmpDir)
 		
 		self.tmpDirSizer = wx.BoxSizer(wx.HORIZONTAL)
 		self.tmpDirSizer.Add(self.tmpDir, 3, wx.EXPAND, PADDING)
@@ -191,6 +199,41 @@ class ConfigBox(wx.Frame):
 		self.Center(wx.BOTH)
 		self.Fit()
 		self.Show(True)
+		
+		
+	def onSelectIncomingDir(self, event):		
+		if (self.incomingDirDialog):
+			self.incomingDirDialog.show()
+		else:
+			self.incomingDirDialog = wx.DirDialog(self, 'Please select a directory for your incoming files', Config.settings.downloadDir)
+			if self.incomingDirDialog.ShowModal() == wx.ID_OK:
+				self.incomingDirName = self.incomingDirDialog.GetPath()
+				if (Config.checkExistence(self.incomingDirName, TYPE_DIR) != EXIST_W):
+					self.incomingDirMessageDialog = wx.MessageDialog(self, 'You dont have permission to write to this directory', 'Error', style = wx.OK)
+					self.incomingDirMessageDialog.ShowModal()
+				else:
+					Config.settings.downloadDir = self.incomingDirName
+					self.incomingDir.SetValue(Config.settings.downloadDir)
+				
+			self.incomingDirDialog.Destroy()
+		
+		
+	def onSelectTmpDir(self, event):		
+		if (self.tmpDirDialog):
+			self.tmpDirDialog.show()
+		else:
+			self.tmpDirDialog = wx.DirDialog(self, 'Please select a directory for temporary files', Config.settings.tmpDir)
+			if self.tmpDirDialog.ShowModal() == wx.ID_OK:
+				self.tmpDirName = self.tmpDirDialog.GetPath()
+				if (Config.checkExistence(self.tmpDirName, TYPE_DIR) != EXIST_W):
+					self.tmpDirMessageDialog = wx.MessageDialog(self, 'You dont have permission to write to this directory', 'Error', style = wx.OK)
+					self.tmpDirMessageDialog.ShowModal()
+				else:
+					Config.settings.tmpDir = self.tmpDirName
+					self.tmpDir.SetValue(Config.settings.tmpDir)
+				
+			self.tmpDirDialog.Destroy()	
+		
 		
 		
 

@@ -7,7 +7,7 @@ ID_CANCEL_BUT = 90002
 
 class DownloadFilePropBox(wx.Frame):
 	def __init__(self, parent, id, title, downloadFile):
-		wx.Frame.__init__(self, parent, id, title, size = (300, 200))
+		wx.Frame.__init__(self, parent, id, title, size = (350, 200))
 		self.parent = parent
 		self.downloadFile = downloadFile
 		self.panel = wx.Panel(self)
@@ -30,9 +30,15 @@ class DownloadFilePropBox(wx.Frame):
 		tmpCompletedText = 'Completed: ' + str(self.downloadFile.getByteDownloaded())
 		self.completedText = wx.StaticText(self.panel, wx.ID_ANY, tmpCompletedText)
 
-
 		tmpRetryText = 'Retry: ' + str(self.downloadFile.getRetry())
 		self.retryText = wx.StaticText(self.panel, wx.ID_ANY, tmpRetryText)
+
+		tmpPercentText = 'Percent: ' + str(self.downloadFile.getPercentage())
+		self.percentText = wx.StaticText(self.panel, wx.ID_ANY, tmpPercentText)
+
+		tmpStatusText = 'Status: ' + str(downloadStatus[self.downloadFile.getStatus()])
+		self.statusText = wx.StaticText(self.panel, wx.ID_ANY, tmpStatusText)
+		
 
 		self.buttonsSizer = wx.BoxSizer(wx.HORIZONTAL)
 		self.okBut = wx.Button(self.panel, ID_OK_BUT, 'OK')
@@ -50,11 +56,13 @@ class DownloadFilePropBox(wx.Frame):
 		self.mainSizer.Add(self.fileSizeText, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.completedText, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.retryText, 0, wx.ALIGN_CENTER)
+		self.mainSizer.Add(self.percentText, 0, wx.ALIGN_CENTER)
+		self.mainSizer.Add(self.statusText, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.buttonsSizer, 0, wx.ALIGN_CENTER)
 		
 		self.panel.SetSizerAndFit(self.mainSizer)
 		self.Center(wx.BOTH)
-		self.Fit()
+		#self.Fit()
 		self.Show(True)
 		
 	def onClickOK(self, event):
