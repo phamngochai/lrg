@@ -185,6 +185,7 @@ class DownloadFile:
 		self.errorStr = ''
 		self.resumable = False
 
+
 	def addDownloadPart(self, downloadPart):
 		self.downloadPartList.append(downloadPart)
 		
