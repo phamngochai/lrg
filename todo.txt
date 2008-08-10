@@ -19,3 +19,4 @@ D Color line
 - Percentage
 D Download dir button
 - Apply sqve
+- download File Prop: parts, dir...
