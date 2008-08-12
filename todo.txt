@@ -16,7 +16,7 @@ D Color line
 - change download order
 - Separate setting and queueing file
 - Ctrl+A, Del...
-- Percentage
+D Percentage
 D Download dir button
 - Apply sqve
 - download File Prop: parts, dir...

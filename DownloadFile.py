@@ -50,12 +50,6 @@ class DownloadFile:
 		
 	def getPartSize(self):
 		return self.partSize
-		
-	def getPercentage(self):
-		return self.percentage
-		
-	def getByteDownloaded(self):
-		return self.byteDownloaded
 	
 	def getStatus(self):
 		return self.status
@@ -77,7 +71,7 @@ class DownloadFile:
 			
 	def getPercentage(self):
 		if (self.fileSize != 0):
-			self.percentage = math.ceil((self.getByteDownloaded() / self.getFileSize()) * 100)
+			self.percentage = math.ceil((float(self.getByteDownloaded()) / self.getFileSize()) * 100)
 		return self.percentage
 		
 	def getByteDownloaded(self):
