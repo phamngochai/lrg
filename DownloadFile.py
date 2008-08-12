@@ -169,6 +169,8 @@ class DownloadFile:
 		self.retry = 0
 		if (self.linkType == RAPIDSHARE_FOLDER):
 			self.fileName = FOLDER_TMP_NAME
+		elif (self.linkType == URLCASH):
+			self.fileName = URLCASH
 		else:
 			self.fileName = None
 		self.fileSize = 0

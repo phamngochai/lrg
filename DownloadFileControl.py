@@ -303,7 +303,7 @@ class DownloadFileControl:
 		formInfo = {}
 		action = None
 		
-		if (self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER):
+		if (self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER or self.downloadFile.getLinkType() == URLCASH):
 			for link in linkList:
 				self.control.addURL(link)
 			self.downloadFile.setStatus(STAT_Z)

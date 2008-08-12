@@ -35,17 +35,24 @@ class LRGParser(HTMLParser):
 				elif ((tupleOne.find('value') != -1) and (foundVar) and (tupleTwo.find('Free') == -1)):
 					value = tupleTwo
 					self.valList.append({name: value})
-		elif (tag == 'a' and self.linkType == RAPIDSHARE_FOLDER):				
-			linkProp = {}			 
-			for att in attrs:
-				linkProp[str(att[0])] = str(att[1])
-			#print 'linkProp ', linkProp
-			if (linkProp.has_key('style') and linkProp.has_key('target') and linkProp.has_key('href')):
-				#print 'style', linkProp['style']
-				#print 'target', linkProp['target']
-				if (linkProp['style'].find(RAPIDSHARE_STYLE) != 1 and linkProp['target'].find(RAPIDSHARE_TARGET) != -1):
-					#print 'adding ', linkProp['href']
-					self.linkList.append(str(linkProp['href']))
+		elif (tag == 'a'):
+			if (self.linkType == RAPIDSHARE_FOLDER):	
+				linkProp = {}			 
+				for att in attrs:
+					linkProp[str(att[0])] = str(att[1])
+				#print 'linkProp ', linkProp
+				if (linkProp.has_key('style') and linkProp.has_key('target') and linkProp.has_key('href')):
+					#print 'style', linkProp['style']
+					#print 'target', linkProp['target']
+					if (linkProp['style'].find(RAPIDSHARE_STYLE) != 1 and linkProp['target'].find(RAPIDSHARE_TARGET) != -1):
+						#print 'adding ', linkProp['href']
+						self.linkList.append(str(linkProp['href']))
+			if (self.linkType == URLCASH):
+				linkProp = {} 
+				for att in attrs:
+					if (att[0] == 'href' and str(att[1]).find(RAPIDSHARE) != -1):
+						self.linkList.append(str(att[1]))
+				
 
 	def handle_endtag(self, tag):
 		if (tag.find('html') != -1):

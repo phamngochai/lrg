@@ -76,6 +76,7 @@ SET_COOKIE = 'Set-Cookie:'
 RAPIDSHARE = 'rapidshare.com'
 RAPIDSHARE_LINK = RAPIDSHARE + '/files/'
 RAPIDSHARE_FOLDER = RAPIDSHARE + '/users/'
+URLCASH = 'urlcash.net'
 UNKNOWN_TYPE = 'UNKNOW'
 
 RAPIDSHARE_STYLE = 'font-size: 12pt;'
@@ -146,13 +147,13 @@ proxyTypeValueList[pycurl.PROXYTYPE_SOCKS4] = PROXY_SOCKS4
 proxyTypeValueList[pycurl.PROXYTYPE_SOCKS5] = PROXY_SOCKS5
 
 errorList = []
-errorList.append('The file could not be found.  Please check the download link.')
+errorList.append('The file could not be found')
 errorList.append('An error has occured')
-errorList.append('This file is suspected to contain illegal content and has been blocked.')
+errorList.append('This file is suspected to contain illegal content and has been blocked')
 errorList.append('Your Premium Account has not been found')
 errorList.append('Invalid login')
 errorList.append('Invalid password')
-errorList.append('The Account has been found, but the password is incorrect.')
+errorList.append('The Account has been found, but the password is incorrect')
 
 E_FILEEXIST_CODE = 0
 E_FILEEXIST_MSG = 'Destination file exists'

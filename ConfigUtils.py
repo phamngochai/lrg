@@ -149,6 +149,8 @@ class Config:
 			return RAPIDSHARE_LINK
 		elif (fileURL.find(RAPIDSHARE_FOLDER) != -1):
 			return RAPIDSHARE_FOLDER
+		elif (fileURL.find(URLCASH) != -1):
+			return URLCASH		
 		else:
 			return UNKNOWN_TYPE
 		
