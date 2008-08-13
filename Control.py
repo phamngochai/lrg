@@ -183,7 +183,7 @@ class Control(threading.Thread):
 		
 		
 	def deleteDownloadTop(self, id = None):
-		print 'deleteDownloadTop ', id
+		#print 'deleteDownloadTop ', id
 		if (id):
 			found = False
 			for downloadFileControl in self.downloadFileControlList:
@@ -206,7 +206,7 @@ class Control(threading.Thread):
 		
 		
 	def deleteDownloadBot(self, id = None):
-		print 'deleteDownloadBot ', id
+		#print 'deleteDownloadBot ', id
 		if (id):
 			self.mainFrame.deleteDownloadFileFromList(id, PANEL_BOT)
 			self.downloadFileList.deleteDownloadFileFromCompletedList(id)
@@ -270,6 +270,7 @@ class Control(threading.Thread):
 				if ret != pycurl.E_CALL_MULTI_PERFORM:
 					#print 'Perfoming break', ret, ' ', num_handles
 					break
+				
 
 			while (True):
 			
@@ -349,7 +350,14 @@ class Control(threading.Thread):
 				#print 'No more connection, I sleep a bit'
 				time.sleep(0.5)
 			else:
-				multiHandler.select(1.0)
+				ret = multiHandler.select(1.0)
+				if (ret == -1):
+					continue
+				while (True):
+					ret, num_handles = multiHandler.perform()
+					if ret != pycurl.E_CALL_MULTI_PERFORM:
+						break
+ 
 
 			
 		for downloadFileControl in self.downloadFileControlList:

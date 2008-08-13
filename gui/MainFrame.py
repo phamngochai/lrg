@@ -213,7 +213,7 @@ class MainFrame(wx.Frame):
 
 
 	def onDeleteTop(self, event):
-		print self.selectedIds
+		#print self.selectedIds
 		for id in self.selectedIds:
 			self.control.deleteDownloadTop(id)
 		
@@ -233,24 +233,34 @@ class MainFrame(wx.Frame):
 
 	def onDownloadFileProp(self, event):					
 		if (self.downloadFilePropBox):
-			self.downloadFilePropBox.Show(True)
+			if (self.downloadFilePropBox.getDownloadFileId() != self.selectedIds[0]):
+				downloadFile = self.control.downloadFileList.getDownloadFileById(self.selectedIds[0])
+				self.downloadFilePropBox.setDownloadFile(downloadFile)
+			self.downloadFilePropBox.updateInfo()
+			self.downloadFilePropBox.Show(True)			
 		else:
 			#print 'self.selectedURLS ', self.selectedURLS
 			downloadFile = self.control.downloadFileList.getDownloadFileById(self.selectedIds[0])
 			self.downloadFilePropBox = DownloadFilePropBox(self, wx.ID_ANY, 'Properties', downloadFile)
 		
+	
+		
+	def setSelectedIds(self, selectedIds):
+		self.selectedIds = selectedIds
 		
 		
 	def onExit(self, event):
 		self.control.exit()
-
+		
 		
 	def quitNow(self):
 		self.Destroy()
+		
 
 	def update(self, downloadFile, updateType):		
 		wx.CallAfter(self.panelTop.update, downloadFile, updateType)
-
+		if (self.downloadFilePropBox and self.downloadFilePropBox.getDownloadFileId() == downloadFile.getId()):
+			self.downloadFilePropBox.updateInfo()
 		
 	def addDownloadFileToList(self, downloadFile, panelPos):
 		if (panelPos == PANEL_TOP):
