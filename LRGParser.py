@@ -48,6 +48,7 @@ class LRGParser(HTMLParser):
 						#print 'adding ', linkProp['href']
 						self.linkList.append(str(linkProp['href']))
 			if (self.linkType == URLCASH):
+				#print 'URLCASH'
 				linkProp = {} 
 				for att in attrs:
 					if (att[0] == 'href' and str(att[1]).find(RAPIDSHARE) != -1):
@@ -56,10 +57,10 @@ class LRGParser(HTMLParser):
 
 	def handle_endtag(self, tag):
 		if (tag.find('html') != -1):
-			if (len(self.valList) > 0):
-				for atts in self.valList:
-					for key, value in atts.items():
-						print key + ': ' + value
+			#if (len(self.valList) > 0):
+				#for atts in self.valList:
+					#for key, value in atts.items():
+						#print key + ': ' + value
 			#print 'VALS: ', self.valList
 			self.downloadFileControl.processTag(self.valList, self.linkList)
 			#self.callback.processTag(tag, attrs)

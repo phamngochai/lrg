@@ -19,6 +19,8 @@ class DownloadFile:
 		self.retry = 0
 		if (self.linkType == RAPIDSHARE_FOLDER):
 			self.fileName = FOLDER_TMP_NAME
+		elif (self.linkType == URLCASH):
+			self.fileName = URLCASH_TMP_NAME
 		else:
 			self.fileName = None
 		self.fileSize = 0
@@ -167,10 +169,11 @@ class DownloadFile:
 		self.formAction = None		
 		self.numberOfPart = Config.settings.maxConnectionPerFile
 		self.retry = 0
+		self.linkType = Config.getLinkType(self.fileURL)
 		if (self.linkType == RAPIDSHARE_FOLDER):
 			self.fileName = FOLDER_TMP_NAME
 		elif (self.linkType == URLCASH):
-			self.fileName = URLCASH
+			self.fileName = URLCASH_TMP_NAME
 		else:
 			self.fileName = None
 		self.fileSize = 0

@@ -128,7 +128,7 @@ class Control(threading.Thread):
 				downloadFile = self.downloadFileList.getDownloadFileById(id)
 				#downloadFile.setStatus(STAT_S)
 				downloadFile.resetInfo()
-				self.mainFrame.update(downloadFile, updateType = [FILESTATUS_COL])
+				self.mainFrame.update(downloadFile, updateType = [FILENAME_COL, FILESTATUS_COL])
 				
 
 		else:
@@ -253,7 +253,7 @@ class Control(threading.Thread):
 							downloadFile = self.downloadFileList.getQueueingFile()
 							#print 'Control downloadFile is ', downloadFile
 							downloadFileControl.setDownloadFile(downloadFile)
-							print 'New downloadFile for downloadFileControl ', downloadFileControl.getDownloadFile().getId()
+							#print 'New downloadFile for downloadFileControl ', downloadFileControl.getDownloadFile().getId()
 							downloadFileControl.continueBuildCurl()
 					break
 

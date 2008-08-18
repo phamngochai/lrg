@@ -83,6 +83,7 @@ RAPIDSHARE_STYLE = 'font-size: 12pt;'
 RAPIDSHARE_TARGET = '_blank'
 
 FOLDER_TMP_NAME = 'RapidShare_Link_List'
+URLCASH_TMP_NAME = 'URLCash_link'
 
 HTTP_PRE = 'http://'
 HTTPS_PRE = 'https://'
