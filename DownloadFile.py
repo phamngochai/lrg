@@ -43,8 +43,10 @@ class DownloadFile:
 				
 	def getFileName(self):
 		if (self.fileName != None):
+			#print 'getFileName not none: ' , self.fileName, str(self.fileName)
 			return str(self.fileName)
 		else:
+			#print 'getFileName NONE ' 
 			return str(Config.getFileNameFromURL(self.getFileURL()))
 	
 	def getFileSize(self):
@@ -114,6 +116,7 @@ class DownloadFile:
 		self.fileURL = fileURL
 		
 	def setFileName(self, fileName):
+		#print 'setFileName ', fileName
 		if (self.linkType != RAPIDSHARE_FOLDER):
 			self.fileName = fileName
 		
@@ -164,6 +167,7 @@ class DownloadFile:
 		self.retry = 0
 		
 	def resetInfo(self):
+		#print 'downloadFile ', self
 		self.percentage = 0
 		self.formInfo = None
 		self.formAction = None		
@@ -176,6 +180,7 @@ class DownloadFile:
 			self.fileName = URLCASH_TMP_NAME
 		else:
 			self.fileName = None
+		#print 'Reset fileName is ', self.fileName
 		self.fileSize = 0
 		self.fileType = ''
 		self.byteDownloaded = 0

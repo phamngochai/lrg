@@ -10,7 +10,7 @@ class LRGParser(HTMLParser):
 		self.toAddPassword = toAddPassword
 		self.linkType = linkType
 		self.downloadFileControl = downloadFileControl
-		self.linkList = []
+		self.linksDict = {}
 		
 	def handle_starttag(self, tag, attrs):
 		if (tag.find('form') != -1):
@@ -37,7 +37,7 @@ class LRGParser(HTMLParser):
 					self.valList.append({name: value})
 		elif (tag == 'a'):
 			if (self.linkType == RAPIDSHARE_FOLDER):	
-				linkProp = {}			 
+				linkProp = {}	 
 				for att in attrs:
 					linkProp[str(att[0])] = str(att[1])
 				#print 'linkProp ', linkProp
@@ -46,13 +46,14 @@ class LRGParser(HTMLParser):
 					#print 'target', linkProp['target']
 					if (linkProp['style'].find(RAPIDSHARE_STYLE) != 1 and linkProp['target'].find(RAPIDSHARE_TARGET) != -1):
 						#print 'adding ', linkProp['href']
-						self.linkList.append(str(linkProp['href']))
+						self.linksDict[str(linkProp['href'])] = str(linkProp['href'])
 			if (self.linkType == URLCASH):
 				#print 'URLCASH'
-				linkProp = {} 
+				#linkProp = {} 
 				for att in attrs:
 					if (att[0] == 'href' and str(att[1]).find(RAPIDSHARE) != -1):
-						self.linkList.append(str(att[1]))
+						#self.linksDict.append(str(att[1]))
+						self.linksDict[str(att[1])] = str(att[1])
 				
 
 	def handle_endtag(self, tag):
@@ -62,7 +63,7 @@ class LRGParser(HTMLParser):
 					#for key, value in atts.items():
 						#print key + ': ' + value
 			#print 'VALS: ', self.valList
-			self.downloadFileControl.processTag(self.valList, self.linkList)
+			self.downloadFileControl.processTag(self.valList, self.linksDict)
 			#self.callback.processTag(tag, attrs)
 			
 	def handle_data(self, data):

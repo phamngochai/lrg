@@ -33,8 +33,8 @@ class DownloadFileControl:
 		self.downloadFile = downloadFile
 		if (self.downloadFile != None):
 			#self.downloadFile.setStatus(STAT_D)
-			fileName = Config.getFileNameFromURL(self.downloadFile.getFileURL())
-			self.downloadFile.setFileName(fileName)
+			#fileName = Config.getFileNameFromURL(self.downloadFile.getFileURL())
+			#self.downloadFile.setFileName(fileName)
 			self.downloadFile.increaseRetry()
 			#print 'Trying #', self.downloadFile.getRetry(), ' ', self.downloadFile.getId()
 			self.control.report(self.downloadFile, updateType = [RETRY_COL])
@@ -59,8 +59,8 @@ class DownloadFileControl:
 		#print 'DownloadFileControl downloadFile is ', downloadFile
 		self.downloadFile = downloadFile
 		#self.downloadFile.setStatus(STAT_D)
-		fileName = Config.getFileNameFromURL(self.downloadFile.getFileURL())
-		self.downloadFile.setFileName(fileName)
+		#fileName = Config.getFileNameFromURL(self.downloadFile.getFileURL())
+		#self.downloadFile.setFileName(fileName)
 		self.downloadFile.increaseRetry()
 		#print 'Trying #', self.downloadFile.getRetry(), ' ', self.downloadFile.getId()
 		self.control.report(self.downloadFile, updateType = [RETRY_COL])
@@ -158,7 +158,7 @@ class DownloadFileControl:
 				#	self.control.report(self.downloadFile, updateType = [FILESTATUS_COL, FILEERROR_COL])
 				#	self.reset()
 				#	return
-				
+				#print 'downloadFileControl downloadFile is ', self.downloadFile
 				if (Config.checkExistence(self.downloadFile.getDestinationFileName(), TYPE_FILE) > 0):
 					print 'downloadFileControl checkExistence ', self.downloadFile.getDestinationFileName(), ' ', Config.checkExistence(self.downloadFile.getDestinationFileName(), TYPE_FILE)
 					self.downloadFile.setStatus(STAT_X)
@@ -299,12 +299,12 @@ class DownloadFileControl:
 		self.reset()
 			
 
-	def processTag(self, valList, linkList):
+	def processTag(self, valList, linksDict):
 		formInfo = {}
 		action = None
 		
 		if (self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER or self.downloadFile.getLinkType() == URLCASH):
-			for link in linkList:
+			for link in linksDict.values():
 				self.control.addURL(link)
 			self.downloadFile.setStatus(STAT_Z)
 			self.control.finishFile(self.downloadFile)

@@ -76,7 +76,8 @@ SET_COOKIE = 'Set-Cookie:'
 RAPIDSHARE = 'rapidshare.com'
 RAPIDSHARE_LINK = RAPIDSHARE + '/files/'
 RAPIDSHARE_FOLDER = RAPIDSHARE + '/users/'
-URLCASH = 'urlcash.net'
+URLCASH = 'urlcash'
+
 UNKNOWN_TYPE = 'UNKNOW'
 
 RAPIDSHARE_STYLE = 'font-size: 12pt;'
