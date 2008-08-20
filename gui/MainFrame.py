@@ -236,7 +236,7 @@ class MainFrame(wx.Frame):
 			if (self.downloadFilePropBox.getDownloadFileId() != self.selectedIds[0]):
 				downloadFile = self.control.downloadFileList.getDownloadFileById(self.selectedIds[0])
 				self.downloadFilePropBox.setDownloadFile(downloadFile)
-			self.downloadFilePropBox.updateInfo()
+			wx.CallAfter(self.downloadFilePropBox.updateInfo)
 			self.downloadFilePropBox.Show(True)			
 		else:
 			#print 'self.selectedURLS ', self.selectedURLS
@@ -260,7 +260,7 @@ class MainFrame(wx.Frame):
 	def update(self, downloadFile, updateType):		
 		wx.CallAfter(self.panelTop.update, downloadFile, updateType)
 		if (self.downloadFilePropBox and self.downloadFilePropBox.getDownloadFileId() == downloadFile.getId()):
-			self.downloadFilePropBox.updateInfo()
+			wx.CallAfter(self.downloadFilePropBox.updateInfo)
 		
 	def addDownloadFileToList(self, downloadFile, panelPos):
 		if (panelPos == PANEL_TOP):

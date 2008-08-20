@@ -91,10 +91,11 @@ class Config:
 	def catFile(downloadFile):
 		desFile = downloadFile.getDestinationFileName()
 		if (Config.checkExistence(desFile, TYPE_FILE) > 0):
-			#os.remove(desFile)
+			#print 'catFile getDestinationFileName exists'
 			return (False, (E_FILEEXIST_CODE, E_FILEEXIST_MSG))
 		numberOfPart = downloadFile.getNumberOfPart()
 		if (numberOfPart == 1):
+			#print 'catFile executing cat on only ONE part'
 			tmpFileName = downloadFile.getFileName() + Config.settings.tmpExt + '0'
 			absTmpFileName = os.path.join(Config.settings.tmpDir, tmpFileName)
 			cmdMv = 'mv "' + absTmpFileName + '" "' + desFile + '"'
@@ -107,6 +108,7 @@ class Config:
 				return (True, None)
 			#print 'DELETING: ', absTmpFileName
 		else:
+			#print 'catFile executing cat on only MULTI part'
 			fileNameList = []
 			for i in range(0, numberOfPart):
 				tmpFileName = downloadFile.getFileName() + Config.settings.tmpExt + str(i)
