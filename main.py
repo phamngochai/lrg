@@ -1,8 +1,12 @@
 import wx
-from gui.MainFrame import MainFrame
-from Control import Control
 import os
 import logging
+import time
+from gui.MainFrame import MainFrame
+from Const import *
+from Control import Control
+from ConfigUtils import Config
+from Log import Log
 
 #pyCurl does not like signal
 try:
@@ -11,18 +15,15 @@ try:
 	signal.signal(signal.SIGPIPE, signal.SIG_IGN)
 except ImportError:
 	pass
-
-logging.basicConfig()
-log = logging.getLogger("logger")
-log.setLevel(logging.DEBUG)
-fh = logging.FileHandler("log.log")
-log.addHandler(fh)
+	
+Config.load()
+log = Log()
 
 app = wx.PySimpleApp()
 app.SetAssertMode(wx.PYAPP_ASSERT_DIALOG)
 
 control = Control(log)
-mainFrame = MainFrame(None, wx.ID_ANY, "Linux Rapidshare Grabber", (0, 0), (800, 600), control)
+mainFrame = MainFrame(None, wx.ID_ANY, "Linux Rapidshare Grabber", (0, 0), (800, 600), control, log)
 control.setMainFrame(mainFrame)
 control.start()
 app.MainLoop()

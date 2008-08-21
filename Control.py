@@ -18,7 +18,7 @@ class Control(threading.Thread):
 	
 	def __init__(self, log):
 		threading.Thread.__init__(self)
-		Config.load()
+		#Config.load()
 		self.saveFileControl = SaveFileControl()
 		self.saveFileControl.start()
 		self.log = log
@@ -240,7 +240,7 @@ class Control(threading.Thread):
 					if (downloadFile != None):
 						downloadFile.resetRetry()
 						
-						print 'Creating: ', i , ' instance ', downloadFile.getId(), ' ', downloadFile.getFileURL()
+						self.log.doLog('Creating: ', i , ' instance ', downloadFile.getId(), ' ', downloadFile.getFileURL())
 						downloadFileControl = DownloadFileControl(self.log, self, self.saveFileControl, downloadFile)
 						downloadFile.setStatus(STAT_D)
 						#downloadFileControl.start()

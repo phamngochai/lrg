@@ -23,6 +23,10 @@ class Config:
 			pass
 		else:		
 			os.mkdir(TMP_DIR)
+		if (Config.checkExistence(LOG_DIR, TYPE_DIR) >= EXIST):
+			pass
+		else:		
+			os.mkdir(LOG_DIR)			
 			
 		if (Config.checkExistence(SETTINGS_FILE, TYPE_FILE) >= EXIST):
 			#print 'FOUND SETTING FILE'

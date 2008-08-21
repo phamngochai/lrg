@@ -35,10 +35,11 @@ ID_DELE_POP_BOT = 4002
 
 
 class MainFrame(wx.Frame):
-	def __init__(self, parent, id, title, pos, size, control):
+	def __init__(self, parent, id, title, pos, size, control, log):
 		wx.Frame.__init__(self, parent, id, title, pos, size)
 		
 		self.control = control
+		self.log = log
 		self.configBox = None
 		self.textBox = None
 		self.aboutBox = None

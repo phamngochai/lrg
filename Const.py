@@ -1,11 +1,13 @@
 import os
 import sys
+import time
 import pycurl
 
 
 DEBUG = 0
+LOG = 1
 
-VERSION = '0.1.1'
+VERSION = '0.1.2'
 
 PANEL_TOP = 0
 PANEL_BOT = 1
@@ -96,6 +98,9 @@ USER_HOME = '~'
 USER_DIR = os.path.expanduser(USER_HOME)
 LRG_DIR = '.lrg'
 CONFIG_DIR = os.path.join(USER_DIR, LRG_DIR)
+LOG_DIR = os.path.join(CONFIG_DIR, 'log')
+LOGFILE_ORG = 'lrg.log.' + str(time.time())
+LOGFILE = os.path.join(LOG_DIR, LOGFILE_ORG)
 CONFIG_FILE = os.path.join(CONFIG_DIR, 'lrg.conf')
 COOKIE_FILE = os.path.join(CONFIG_DIR, 'lrg.cookies')
 QUEUEINGLIST_FILE = os.path.join(CONFIG_DIR, 'queue_lrg.save') 
