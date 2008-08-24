@@ -48,7 +48,7 @@ class DownloadFileControl:
 		self.busy = False
 		self.done = False
 		self.gotJob = True
-		self.downloadPartControlList = []
+		self.downloadPartControlList = []		
 		self.isChecking = False
 		#self.
 		#self.multiCurl = pycurl.CurlMulti()
@@ -159,8 +159,8 @@ class DownloadFileControl:
 				#	self.reset()
 				#	return
 				#print 'downloadFileControl downloadFile is ', self.downloadFile
-				if (Config.checkExistence(self.downloadFile.getDestinationFileName(), TYPE_FILE) > 0):
-					print 'downloadFileControl checkExistence ', self.downloadFile.getDestinationFileName(), ' ', Config.checkExistence(self.downloadFile.getDestinationFileName(), TYPE_FILE)
+				if Config.checkExistence(self.downloadFile.getDestinationFileName(), TYPE_FILE) > 0 :
+					self.log.debug('downloadFileControl checkExistence', self.downloadFile.getDestinationFileName(), Config.checkExistence(self.downloadFile.getDestinationFileName(), TYPE_FILE))
 					self.downloadFile.setStatus(STAT_X)
 					self.control.report(self.downloadFile, updateType = [FILESTATUS_COL])
 					self.reset()
@@ -169,7 +169,7 @@ class DownloadFileControl:
 				#curlClass = CurlClass()
 				
 				formInfo = self.downloadFile.getFormInfo()			
-				if (formInfo != None):
+				if formInfo:
 					#print 'GOT FORM ', self.downloadFile.getId()				
 					self.curlClass.setFormInfo(self.downloadFile.getFormAction(), formInfo)				
 				else:
@@ -177,7 +177,7 @@ class DownloadFileControl:
 					self.curlClass.setFormInfo(self.downloadFile.getFileURL())
 	
 					
-				if (Config.checkServerURL(self.downloadFile.getFileURL(), RAPIDSHARE)):
+				if Config.checkServerURL(self.downloadFile.getFileURL(), RAPIDSHARE) :
 					self.curlClass.setCookie()
 				
 				self.curlClass.setProcessHeader(self.processHeader)
@@ -193,11 +193,11 @@ class DownloadFileControl:
 			except pycurl.error, e:
 				#print 'DownloadFileControl pycurl.error: ', e
 				error = str(e)
-				if (error.find('(') == -1 or error.find(',') == -1):
+				if error.find('(') == -1 or error.find(',') == -1 :
 					return
 				errorCode = int(error[error.find('(') + 1 : error.find(',')])
 				#print errorCode
-				if (errorCode == 23):
+				if errorCode == 23 :
 					#print '23 is oK, we return'
 					return
 				else:
@@ -266,7 +266,7 @@ class DownloadFileControl:
 		self.control.report(self.downloadFile, updateType = [FILESTATUS_COL, RETRY_COL, FILEERROR_COL])
 	
 		for downloadPartControl in self.downloadPartControlList:
-			if (downloadPartControl.getDownloadPart().getPartNo() == partNo):
+			if downloadPartControl.getDownloadPart().getPartNo() == partNo :
 				downloadPartControl.closeTmpFile()
 				downloadPartControl.run()
 				break
@@ -278,9 +278,9 @@ class DownloadFileControl:
 	def checkFinish(self):		
 		
 		for downloadPartControl in self.downloadPartControlList:			
-			if (downloadPartControl.isCompleted() != True):		
+			if downloadPartControl.isInUse() and not downloadPartControl.isCompleted() :
 				return
-		if (not self.isChecking):
+		if not self.isChecking :
 			self.isChecking = True
 			#print 'DONE DOWNLOADING ', self.downloadFile.getId()
 			self.downloadFile.setStatus(STAT_C)
@@ -290,20 +290,30 @@ class DownloadFileControl:
 		
 		
 	def doneSaveFile(self, results = None):
-		if (results != None):
+		if results :
 			result, errors = results
 		#print 'CALLBACK FROM SaveFileControl ', self.downloadFile.getId(), ' ', result, ' ', errors
+		for downloadPartControl in self.downloadPartControlList:			
+			downloadPartControl.resetInUse()
 		self.downloadFile.setStatus(STAT_Z)
 		self.control.report(self.downloadFile, updateType = [FILESTATUS_COL])
 		self.control.finishFile(self.downloadFile)
 		self.reset()
 			
 
+
+	def getDownloadPartControl(self):		 	
+		for downloadPartControl in self.downloadPartControlList:
+			if not downloadPartControl.isInUse() :
+				return downloadPartControl
+		return None
+
+
 	def processTag(self, valList, linksDict):
 		formInfo = {}
 		action = None
 		
-		if (self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER or self.downloadFile.getLinkType() == URLCASH):
+		if self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER or self.downloadFile.getLinkType() == URLCASH :
 			for link in linksDict.values():
 				self.control.addURL(link)
 			self.downloadFile.setStatus(STAT_Z)
@@ -312,15 +322,15 @@ class DownloadFileControl:
 			return
 			
 		for item in valList:
-			for key, value in item.items():
-				if (key.find('action') != -1):
+			for key, value in item.items() :
+				if key.find('action') != -1 :
 					action = value
-					if (action.find('/cgi-bin/premium.cgi') != -1):
+					if action.find('/cgi-bin/premium.cgi') != -1 :
 						action = 'http://rapidshare.com' + action
 				else:
 					formInfo[key] = value
 		#print 'NEW LINKS: ' + action
-		if (action != None):
+		if action :
 			self.downloadFile.setFormAction(action)
 			self.downloadFile.setFormInfo(formInfo)
 			#print 'DownloadFileControl, processTag, create DownloadFileControl thread'
@@ -335,29 +345,29 @@ class DownloadFileControl:
 	def processHeader(self, buf):
 		#print 'Header :', buf
 	
-		if (buf.find(CONTENT_TYPE) != -1):
+		if buf.find(CONTENT_TYPE) != -1 :
 			fileType = buf[buf.find(':') + 2 : buf.find(';')]
 			self.downloadFile.setFileType(fileType)
 			#print 'processHeader, File type: ', fileType
 			
-		if (buf.find(SET_COOKIE) != -1):
+		if buf.find(SET_COOKIE) != -1 :
 			cookie = buf[buf.find(':') + 2 : buf.find(';')]
 			Config.settings.cookie = cookie
 			
-		if (buf.find(CONTENT_LENGTH) != -1):
+		if buf.find(CONTENT_LENGTH) != -1 :
 			fileSize = int(buf[buf.find(':') + 2 :])
 			self.downloadFile.setFileSize(fileSize)
 			#print 'processheader, File size: ', fileSize
 			
-		if (buf.find(ACCEPT_RANGE) != 1):
+		if buf.find(ACCEPT_RANGE) != 1 :
 			self.downloadFile.setResumable(True)
 
 		
 	def processBody(self, buf):
 		
-		if (self.downloadFile.getFileType() == TEXTHTML):
+		if self.downloadFile.getFileType() == TEXTHTML :
 			self.htmlBody += buf
-			if (buf.find('</html>') != -1):
+			if buf.find('</html>') != -1 :
 				toAddPassword = Config.checkServerURL(self.downloadFile.getFileURL(), RAPIDSHARE)
 				linkType = self.downloadFile.getLinkType()
 				parser = LRGParser(self, toAddPassword, linkType)
@@ -375,7 +385,7 @@ class DownloadFileControl:
 						
 			#print 'DownloadFileControl OH dear this is: ' + self.downloadFile.getFileType()
 			desFile = Config.settings.downloadDir + self.downloadFile.getFileName()
-			if (Config.checkExistence(desFile, 'F') > 0):
+			if Config.checkExistence(desFile, 'F') > 0 :
 				#print 'DownloadFileControl FILE EXIST', self.downloadFile.getId()				
 				self.control.finishFile(self.downloadFile)
 				self.reset()
@@ -395,20 +405,23 @@ class DownloadFileControl:
 				
 			self.downloadFile.setPartSize()
 			
-			self.downloadPartControlList = []
+			#self.downloadPartControlList = []
 			
-			if (len(self.downloadFile.getDownloadPartList()) > 0):
+			if len(self.downloadFile.getDownloadPartList()) > 0 :
 				#print 'Got downloadPartList ', self.downloadFile.getId()
 				for downloadPart in self.downloadFile.getDownloadPartList():
 					#self.setRange(downloadPart)
 					#self.downloadFile.addDownloadPart(downloadPart)
 					#print '>>> PART: ', i, ' SIZE on disk: ', currentSize, ' Rollbacksize: ', Config.getResumeSize(), ' RANGE IS: ', dlrange
 					#print 'DownloadFileControl, processHeader, create DownloadPartControl Thread'
-					downloadPartControl = DownloadPartControl(self.log, downloadPart, self)
+					downloadPartControl = self.getDownloadPartControl()
+					if not downloadPartControl :
+						downloadPartControl = DownloadPartControl(self.log, downloadPart, self)
+						self.downloadPartControlList.append(downloadPartControl)
+					else:
+						downloadPartControl.setDownloadPart(downloadPart)						
 					#downloadPartControl.start()
-					downloadPartControl.run()
-	
-					self.downloadPartControlList.append(downloadPartControl)					
+					downloadPartControl.run()										
 			
 			else:
 				#print 'NO downloadPartList ', self.downloadFile.getId()
@@ -419,13 +432,18 @@ class DownloadFileControl:
 					self.downloadFile.addDownloadPart(downloadPart)
 					#print '>>> PART: ', i, ' SIZE on disk: ', currentSize, ' Rollbacksize: ', Config.getResumeSize(), ' RANGE IS: ', dlrange
 					#print 'DownloadFileControl, processHeader, create DownloadPartControl Thread'
-					downloadPartControl = DownloadPartControl(self.log, downloadPart, self)
+					downloadPartControl = self.getDownloadPartControl()					
+					if not downloadPartControl :
+						downloadPartControl = DownloadPartControl(self.log, downloadPart, self)
+						self.downloadPartControlList.append(downloadPartControl)
+					else:
+						downloadPartControl.setDownloadPart(downloadPart)
 					#downloadPartControl.start()
 					downloadPartControl.run()
 	
 					self.downloadPartControlList.append(downloadPartControl)
 
-			if (self.downloadFile.getStatus() == STAT_S):
+			if self.downloadFile.getStatus() == STAT_S :
 				self.stop()
 		
 			self.checkFinish()		

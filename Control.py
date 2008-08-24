@@ -240,7 +240,7 @@ class Control(threading.Thread):
 					if (downloadFile != None):
 						downloadFile.resetRetry()
 						
-						self.log.doLog('Creating: ', i , ' instance ', downloadFile.getId(), ' ', downloadFile.getFileURL())
+						self.log.debug('Creating:', i , 'instance', downloadFile.getId(), downloadFile.getFileURL())
 						downloadFileControl = DownloadFileControl(self.log, self, self.saveFileControl, downloadFile)
 						downloadFile.setStatus(STAT_D)
 						#downloadFileControl.start()
