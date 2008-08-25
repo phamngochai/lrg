@@ -1,16 +1,34 @@
-from HTMLParser import HTMLParser
+import HTMLParser
 from ConfigUtils import *
 from Const import *
+from Log import Log
 
-class LRGParser(HTMLParser):
+class LRGParser(HTMLParser.HTMLParser):
 	
 	def __init__(self, downloadFileControl, toAddPassword, linkType):	
-		HTMLParser.__init__(self)		
+		HTMLParser.HTMLParser.__init__(self)		
 		self.valList = []
 		self.toAddPassword = toAddPassword
 		self.linkType = linkType
 		self.downloadFileControl = downloadFileControl
 		self.linksDict = {}
+		self.log = Log()
+		
+	def feed(self, htmlBody):
+		try:
+			HTMLParser.HTMLParser.feed(self, htmlBody)			
+		except HTMLParser.HTMLParseError:
+			if self.linkType == URLCASH:
+				tmpHTMLBody = htmlBody
+				pos = tmpHTMLBody.find(URLCASH_IFRAME)
+				if pos != -1:
+					tmpBody = tmpHTMLBody[pos + len(URLCASH_IFRAME):]
+					rapidUrl = tmpBody[:tmpBody.find(SINGLE_QUOTE)]
+					self.log.debug(rapidUrl)
+					self.linksDict[rapidUrl] = rapidUrl
+					self.downloadFileControl.processTag(self.valList, self.linksDict)
+				else:
+					self.downloadFileControl.reportError('Cannot find rapidshare links')
 		
 	def handle_starttag(self, tag, attrs):
 		if (tag.find('form') != -1):

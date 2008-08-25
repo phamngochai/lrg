@@ -5,8 +5,8 @@ D tried columm
 - cookiejar
 D downloadFileControl fileexist
 D use thread to move tmp files
-- reuse objects
-- right click file property
+D reuse objects
+D right click file property
 - proxy auth
 D Save downloaded list
 D Redownload

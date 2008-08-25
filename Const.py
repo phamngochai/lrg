@@ -87,10 +87,13 @@ RAPIDSHARE_TARGET = '_blank'
 
 FOLDER_TMP_NAME = 'RapidShare_Link_List'
 URLCASH_TMP_NAME = 'URLCash_link'
+URLCASH_IFRAME = "<iframe name='redirectframe' id='redirectframe' width='100%' height='100%' src='"
 
 HTTP_PRE = 'http://'
 HTTPS_PRE = 'https://'
 
+SINGLE_QUOTE = "'"
+DOUBLE_QUOTE = '"'
 CURRENT_ID = 1
 
 RUNNING_PATH = os.path.realpath(os.path.dirname(sys.argv[0]))
