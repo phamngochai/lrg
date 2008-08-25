@@ -8,15 +8,16 @@ import time
 from ConfigUtils import *
 from Const import *
 from CurlClass import CurlClass
+from Log import Log
 
 #class DownloadPartControl(threading.Thread):
 class DownloadPartControl:
 
-	def __init__(self, log, downloadPart, downloadFileControl):
+	def __init__(self, downloadPart, downloadFileControl):
 		#threading.Thread.__init__(self)
 		self.toContinue = True
 		#self.conf = Config()
-		self.log = log
+		#self.log = Log()
 		self.downloadFileControl = downloadFileControl
 		self.byteDownloaded = 0
 		self.downloadPart = downloadPart
@@ -26,7 +27,7 @@ class DownloadPartControl:
 		self.inUse = True
 		
 		self.curlClass = CurlClass(self.downloadPart.getId())
-		self.log.debug('Created curl object', self.downloadPart.getId())
+		#self.log.debug('Created curl object', self.downloadPart.getId())
 		self.curl = None
 
 		
@@ -59,7 +60,7 @@ class DownloadPartControl:
 			self.downloadPart.setRange()
 			
 			if self.downloadPart.isCompleted() :
-				self.log.debug('THIS PART IS COMPLETED, QUIT', self.downloadPart.getId())
+				#self.log.debug('THIS PART IS COMPLETED, QUIT', self.downloadPart.getId())
 				#self.downloadFileControl.finishPart(self.downloadPart)
 				return
 			
@@ -67,14 +68,12 @@ class DownloadPartControl:
 			partNo = self.downloadPart.getPartNo()
 			currentSize = None
 			
-			if self.downloadPart.isResuming() :				
-								
-				self.log.debug('RESUMING DOWNLOAD', self.downloadPart.getId())
+			if self.downloadPart.isResuming() :								
+				#self.log.debug('RESUMING DOWNLOAD', self.downloadPart.getId())
 				self.fileObj = open(tmpFileName, 'r+')
-				self.fileObj.seek(self.downloadPart.getFileSeekPos())
-				
+				self.fileObj.seek(self.downloadPart.getFileSeekPos())				
 			else:
-				self.log.debug('DOWNLOAD NEW', self.downloadPart.getId())
+				#self.log.debug('DOWNLOAD NEW', self.downloadPart.getId())
 				self.fileObj = open(tmpFileName, 'w')
 
 			self.curlClass.setDownloadRange(self.downloadPart.getDownloadRange())
@@ -96,7 +95,7 @@ class DownloadPartControl:
 			#print 'DownloadPartControl added curlObject ', self.downloadPart.getId()
 		
 		except pycurl.error, e:
-			self.log.debug('DownloadPartControl Exception', self.downloadPart.getId(), pycurl.error, e)
+			#self.log.debug('DownloadPartControl Exception', self.downloadPart.getId(), pycurl.error, e)
 			self.fileObj.flush()
 			self.fileObj.close()
 				
@@ -152,7 +151,7 @@ class DownloadPartControl:
 			self.fileObj.flush()
 			self.fileObj.close()
 			self.downloadFileControl.reportError(str(e))
-			self.log.debug('DownloadPartControl writeBody IOException:', self.downloadPart.getId(), e)
+			#self.log.debug('DownloadPartControl writeBody IOException:', self.downloadPart.getId(), e)
 			return pycurl.E_WRITE_ERROR
 			
 	
@@ -173,7 +172,7 @@ class DownloadPartControl:
 				
 		#What can be wrong here?
 		except Exception, e:			
-			self.log.debug('DownloadPartControl progressBody Exception', self.downloadPart.getId(), e)
+			#self.log.debug('DownloadPartControl progressBody Exception', self.downloadPart.getId(), e)
 			return 1
 	
 	

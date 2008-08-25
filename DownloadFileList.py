@@ -15,8 +15,17 @@ class DownloadFileList:
 		self.completedFileListLock = Lock()
 
 	def unsetLock(self):
+		self.downloadFileListLock.acquire()
+		for downloadFile in self.downloadFileList:
+			downloadFile.removeDownloadParts()
+		self.downloadFileListLock.release()
+		self.completedFileListLock.acquire()
+		for downloadFile in self.completedFileList:
+			downloadFile.removeDownloadParts()
+		self.completedFileListLock.release()		
 		self.downloadFileListLock = None
 		self.completedFileListLock = None
+		
 
 		
 	def getList(self, getCompletedList = None):

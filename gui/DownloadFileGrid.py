@@ -59,6 +59,8 @@ class DownloadFileGrid(wx.grid.Grid):
 
 		self.SetColSize(FILENAME_COL, FILENAME_COL_SIZE)
 		self.SetColSize(FILESTATUS_COL, FILESTATUS_COL_SIZE)
+		self.SetColSize(FILESPEED_COL, FILESPEED_COL_SIZE)
+		self.SetColSize(FILECOMP_COL, FILECOMP_COL_SIZE)
 		self.SetColSize(FILEURL_COL, FILEURL_COL_SIZE)
 		self.SetColSize(FILEERROR_COL, FILEERROR_COL_SIZE)
 		

@@ -1,6 +1,7 @@
+import os
 from ConfigUtils import *
 from DownloadFile import DownloadFile
-import os
+from Log import Log
 
 class DownloadPart(DownloadFile):
 
@@ -30,6 +31,7 @@ class DownloadPart(DownloadFile):
 		self.completed = False
 		self.seekPos = 0
 		self.resuming = False
+		#self.log = Log()
 		
 	
 	#def getRetry(self):
@@ -138,7 +140,7 @@ class DownloadPart(DownloadFile):
 		#print 'DownloadPart fileSize', fileSize
 		
 		if (Config.checkExistence(tmpFileName, 'F') >= 0 ):
-			print 'DownloadPart, tmp file does exist'
+			#self.log.debug('DownloadPart, tmp file does exist', self.getId())
 			self.setResuming(True)
 			
 			currentSize = os.path.getsize(tmpFileName)			
@@ -148,7 +150,7 @@ class DownloadPart(DownloadFile):
 			realPartSize = Config.getPartSize(fileSize, self.getNumberOfPart(), partNo)
 			
 			if (currentSize > realPartSize):
-				print 'setRange BIGGER FILESIZE found, will be overwriten now ', self.getId()
+				#self.log.debug('setRange BIGGER FILESIZE found, will be overwriten now', self.getId())
 				currentSize = 0
 			
 			resumeSize = Config.settings.resumeSize
@@ -173,7 +175,7 @@ class DownloadPart(DownloadFile):
 			
 		else:
 			self.setResuming(False)
-			print 'DownloadPart, tmp file does not exist'
+			#self.log.debug('DownloadPart, tmp file does not exist', self.getId())
 			beginPos = int(partNo * partSize)
 			endPos = int((partNo + 1) * partSize - 1)
 			if (endPos >= fileSize):

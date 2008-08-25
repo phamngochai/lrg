@@ -11,26 +11,31 @@ from DownloadFileList import DownloadFileList
 from DownloadFileControl import DownloadFileControl
 from DownloadFile import DownloadFile
 from SaveFileControl import SaveFileControl
+from Log import Log
 
 from gui.MainFrame import MainFrame
 
 class Control(threading.Thread):
 	
-	def __init__(self, log):
+	def __init__(self):
 		threading.Thread.__init__(self)
 		#Config.load()
 		self.saveFileControl = SaveFileControl()
 		self.saveFileControl.start()
-		self.log = log
+		#self.log = Log()
 		self.toContinue = True
 		self.isStopped = True
 		self.queueingCurlObjectList = []
 		self.curlLock = threading.Lock()
 		#Check and load download files list
 		if (Config.checkExistence(Config.settings.queueingListFile, TYPE_FILE) >= 0):
-			queueingFile = open(Config.settings.queueingListFile, 'rb')
-			self.downloadFileList = cPickle.load(queueingFile)
-			queueingFile.close()
+			try:
+				queueingFile = open(Config.settings.queueingListFile, 'rb')
+				self.downloadFileList = cPickle.load(queueingFile)
+				queueingFile.close()
+			except EOFError:
+				self.downloadFileList = DownloadFileList()
+				#self.log.debug('Queueing file error')				
 			self.downloadFileList.setLock()
 			self.downloadFileList.resetStatus(STAT_S)
 		else:
@@ -73,10 +78,11 @@ class Control(threading.Thread):
 		self.toContinue = False
 		for downloadFileControl in self.downloadFileControlList:
 			#print 'Stopping ', downloadFileControl.getDownloadFile().getId()
-			downloadFileControl.stop()
-			#print 'Stopping Done'
-		
-		self.downloadFileList.unsetLock()		
+			downloadFileControl.stop()			
+			#print 'Stopping Done'		
+		self.downloadFileList.unsetLock()
+		#self.log.debug('downloadFileListLock', self.downloadFileList.downloadFileListLock)
+		#self.log.debug('completedFileListLock', self.downloadFileList.completedFileListLock)
 		self.saveQueueingFiles()
 		#for downloadFile in self.downloadFileList.getList():
 			#print downloadFile
@@ -85,6 +91,7 @@ class Control(threading.Thread):
 	#this is dangerous!!!
 	def saveQueueingFiles(self):
 		queueingFile = open(Config.settings.queueingListFile, 'wb')
+		#print dir(self.downloadFileList)
 		cPickle.dump(self.downloadFileList, queueingFile, cPickle.HIGHEST_PROTOCOL)
 		queueingFile.close()
 
@@ -240,8 +247,8 @@ class Control(threading.Thread):
 					if (downloadFile != None):
 						downloadFile.resetRetry()
 						
-						self.log.debug('Creating:', i , 'instance', downloadFile.getId(), downloadFile.getFileURL())
-						downloadFileControl = DownloadFileControl(self.log, self, self.saveFileControl, downloadFile)
+						#self.log.debug('Creating:', i , 'instance', downloadFile.getId(), downloadFile.getFileURL())
+						downloadFileControl = DownloadFileControl(self, self.saveFileControl, downloadFile)
 						downloadFile.setStatus(STAT_D)
 						#downloadFileControl.start()
 						downloadFileControl.run()

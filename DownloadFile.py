@@ -75,8 +75,15 @@ class DownloadFile:
 			
 	def getPercentage(self):
 		if (self.fileSize != 0):
-			self.percentage = int(math.ceil((float(self.getByteDownloaded()) / self.getFileSize()) * 100))
+			#self.percentage = int(math.ceil((float(self.getByteDownloaded()) / self.getFileSize()) * 100))
+			self.percentage = (float(self.getByteDownloaded()) / self.getFileSize()) * 100
 		return self.percentage
+
+	def getFormattedPercentage(self):
+		return "%.1f%%" % self.getPercentage()
+
+	def getFormattedSpeed(self):
+		return "%.2f KB/s" % self.getSpeed()
 		
 	def getByteDownloaded(self):
 		byteDownloaded = 0
@@ -193,6 +200,8 @@ class DownloadFile:
 	def addDownloadPart(self, downloadPart):
 		self.downloadPartList.append(downloadPart)
 		
+	def removeDownloadParts(self):
+		self.downloadPartList = []		
 		
 	def getInfoByCol(self, colId):
 		if (colId == FILEID_COL):
@@ -202,17 +211,19 @@ class DownloadFile:
 		elif (colId == FILESTATUS_COL):
 			return str(downloadStatus[self.getStatus()])
 		elif (colId == FILESPEED_COL):
-			return str("%.2f" % self.getSpeed())
+			#return str("%.2f" % self.getSpeed()) + ' KBps'
+			return self.getFormattedSpeed()
 		elif (colId == FILESIZE_COL):
 			locale.setlocale(locale.LC_ALL, "")
 			num = math.ceil(self.getFileSize() / 1024)		
-			return str(locale.format("%d", num, True)) + ' KB'			
+			return str(locale.format("%d", num, True)) + ' KB'
 		elif (colId == FILECOMP_COL):
 			locale.setlocale(locale.LC_ALL, "")
-			num = math.ceil(self.getByteDownloaded() / 1024)		
+			num = math.ceil(self.getByteDownloaded() / 1024)
 			return str(locale.format("%d", num, True)) + ' KB'
-		elif (colId == PERCENT_COL):			
-			return str(self.getPercentage())
+		elif (colId == PERCENT_COL):
+			#return str(self.getPercentage()) + ' %'
+			return self.getFormattedPercentage()
 		elif (colId == RETRY_COL):
 			return str(self.getRetry())
 		elif (colId == FILEURL_COL):

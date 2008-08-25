@@ -1,6 +1,8 @@
 import wx
 import os
 import time
+import threading
+
 from PanelTop import PanelTop
 from PanelBot import PanelBot
 from TextBox import TextBox
@@ -8,7 +10,7 @@ from ConfigBox import ConfigBox
 from AboutBox import AboutBox
 from DownloadFilePropBox import DownloadFilePropBox
 from Const import *
-import threading
+from Log import Log
 
 ID_OPEN = 1001
 ID_PASTE = 1002
@@ -35,11 +37,11 @@ ID_DELE_POP_BOT = 4002
 
 
 class MainFrame(wx.Frame):
-	def __init__(self, parent, id, title, pos, size, control, log):
+	def __init__(self, parent, id, title, pos, size, control):
 		wx.Frame.__init__(self, parent, id, title, pos, size)
 		
 		self.control = control
-		self.log = log
+		self.log = Log()
 		self.configBox = None
 		self.textBox = None
 		self.aboutBox = None

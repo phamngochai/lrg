@@ -6,16 +6,17 @@ import os
 import sys
 import threading
 import time
-import logging
+
 import pycurl
-from getopt import getopt
 from math import *
+
+#from getopt import getopt
 from LRGParser import LRGParser
 #import URLHandlers
 from DownloadFile import DownloadFile
 from DownloadPart import DownloadPart
 from DownloadPartControl import DownloadPartControl
-
+from Log import Log
 from Const import *
 from ConfigUtils import *
 from CurlClass import CurlClass
@@ -23,9 +24,9 @@ from CurlClass import CurlClass
 
 #class DownloadFileControl(threading.Thread):
 class DownloadFileControl:
-	def __init__(self, log, control, saveFileControl, downloadFile = None):
+	def __init__(self, control, saveFileControl, downloadFile = None):
 		#threading.Thread.__init__(self)		
-		self.log = log
+		self.log = Log()
 		self.isKilled = False
 		#self.aLog.info('Starting Download')
 		self.control = control
@@ -416,7 +417,7 @@ class DownloadFileControl:
 					#print 'DownloadFileControl, processHeader, create DownloadPartControl Thread'
 					downloadPartControl = self.getDownloadPartControl()
 					if not downloadPartControl :
-						downloadPartControl = DownloadPartControl(self.log, downloadPart, self)
+						downloadPartControl = DownloadPartControl(downloadPart, self)
 						self.downloadPartControlList.append(downloadPartControl)
 					else:
 						downloadPartControl.setDownloadPart(downloadPart)						
@@ -432,9 +433,9 @@ class DownloadFileControl:
 					self.downloadFile.addDownloadPart(downloadPart)
 					#print '>>> PART: ', i, ' SIZE on disk: ', currentSize, ' Rollbacksize: ', Config.getResumeSize(), ' RANGE IS: ', dlrange
 					#print 'DownloadFileControl, processHeader, create DownloadPartControl Thread'
-					downloadPartControl = self.getDownloadPartControl()					
+					downloadPartControl = self.getDownloadPartControl()
 					if not downloadPartControl :
-						downloadPartControl = DownloadPartControl(self.log, downloadPart, self)
+						downloadPartControl = DownloadPartControl(downloadPart, self)
 						self.downloadPartControlList.append(downloadPartControl)
 					else:
 						downloadPartControl.setDownloadPart(downloadPart)

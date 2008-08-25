@@ -46,7 +46,8 @@ class DownloadFilePropBox(wx.Frame):
 		
 		self.percentTextSizer = wx.BoxSizer(wx.HORIZONTAL)
 		self.percentText = wx.StaticText(self.panel, wx.ID_ANY, 'Percent: ')
-		self.percentTextValue = wx.StaticText(self.panel, wx.ID_ANY, str(self.downloadFile.getPercentage()))
+		#self.percentTextValue = wx.StaticText(self.panel, wx.ID_ANY, str(self.downloadFile.getPercentage()))
+		self.percentTextValue = wx.StaticText(self.panel, wx.ID_ANY, self.downloadFile.getFormattedPercentage())
 		self.percentTextSizer.Add(self.percentText, 0, wx.EXPAND)
 		self.percentTextSizer.Add(self.percentTextValue, 0, wx.EXPAND)
 
@@ -112,7 +113,8 @@ class DownloadFilePropBox(wx.Frame):
 		self.fileSizeTextValue.SetLabel(str(self.downloadFile.getFileSize()))
 		self.completedTextValue.SetLabel(str(self.downloadFile.getByteDownloaded()))
 		self.retryTextValue.SetLabel(str(self.downloadFile.getRetry()))
-		self.percentTextValue.SetLabel(str(self.downloadFile.getPercentage()))
+		#self.percentTextValue.SetLabel(str(self.downloadFile.getPercentage()))
+		self.percentTextValue.SetLabel(self.downloadFile.getFormattedPercentage())
 		self.statusTextValue.SetLabel(str(downloadStatus[self.downloadFile.getStatus()]))
 		self.numberOfPartTextValue.SetLabel(str(self.downloadFile.getNumberOfPart()))
 	
