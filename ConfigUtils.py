@@ -10,23 +10,6 @@ import threading
 class Config:
 
 	def load():
-						
-		if (Config.checkExistence(CONFIG_DIR, TYPE_DIR) >= EXIST):
-			pass
-		else:
-			os.mkdir(CONFIG_DIR)
-		if (Config.checkExistence(DOWNLOAD_DIR, TYPE_DIR) >= EXIST):
-			pass
-		else:			
-			os.mkdir(DOWNLOAD_DIR)
-		if (Config.checkExistence(TMP_DIR, TYPE_DIR) >= EXIST):
-			pass
-		else:		
-			os.mkdir(TMP_DIR)
-		if (Config.checkExistence(LOG_DIR, TYPE_DIR) >= EXIST):
-			pass
-		else:		
-			os.mkdir(LOG_DIR)			
 			
 		if (Config.checkExistence(SETTINGS_FILE, TYPE_FILE) >= EXIST):
 			#print 'FOUND SETTING FILE'
@@ -59,7 +42,33 @@ class Config:
 			Config.settings.currentId = CURRENT_ID
 			Config.settings.cookie = None
 
-		Config.idLock = threading.Lock()	
+		Config.idLock = threading.Lock()
+		
+		errStr = ''
+		if Config.checkExistence(CONFIG_DIR, TYPE_DIR) < EXIST:
+			try:
+				os.mkdir(CONFIG_DIR)
+			except OSError:
+				errStr = 'Cannot open/create ' + CONFIG_DIR + "\n"
+		if Config.checkExistence(Config.settings.downloadDir, TYPE_DIR) < EXIST:
+			try:
+				os.mkdir(Config.settings.downloadDir)
+			except OSError:
+				errStr += 'Cannot open/create ' + Config.settings.downloadDir + "\n" 
+		if Config.checkExistence(Config.settings.tmpDir, TYPE_DIR) < EXIST:
+			try:
+				os.mkdir(Config.settings.tmpDir)
+			except OSError:
+				errStr += 'Cannot open/create ' + Config.settings.downloadDir + "\n"				
+		if Config.checkExistence(LOG_DIR, TYPE_DIR) < EXIST:
+			try:
+				os.mkdir(LOG_DIR)
+			except OSError:
+				errStr += 'Cannot open/create ' + Config.settings.downloadDir + "\n"				
+		
+		if errStr != '':
+			print "Error:\n" + errStr
+			sys.exit() 
 	
 	def save():
 		settingsFile = open(SETTINGS_FILE, 'wb') 
@@ -80,20 +89,30 @@ class Config:
 		tmpFileName = filename + Config.settings.tmpExt + str(i)
 		return os.path.join(Config.settings.tmpDir, tmpFileName)
 
-	def checkExistence(object, objectType):
-		if (os.access(object, os.W_OK)):
-			return EXIST_W
-		if (os.access(object, os.R_OK)):
-			return EXIST_R			
-		if (objectType.upper() == TYPE_FILE):
-			if (os.path.isfile(object)):
-				return EXIST
-		elif (objectType.upper() == TYPE_DIR):
-			if (os.path.isdir(object)):
-				return EXIST
+	def checkExistence(object, objectType):		
+		if objectType.upper() == TYPE_FILE:			
+			if os.path.isfile(object):
+				if os.access(object, os.W_OK):
+					return EXIST_W
+				else:
+					return EXIST_R
+			else:
+				return NO_EXIST
+		else:			
+			if os.path.isdir(object):
+				if os.access(object, os.W_OK):
+					return EXIST_W
+				else:
+					return EXIST_R
+			else:
+				return NO_EXIST
+
 		
 	def catFile(downloadFile):
 		desFile = downloadFile.getDestinationFileName()
+		#print 'Config.checkExistence(Config.settings.downloadDir, TYPE_DIR) ', Config.checkExistence(Config.settings.downloadDir, TYPE_DIR)
+		if Config.checkExistence(Config.settings.downloadDir, TYPE_DIR) < EXIST_W:
+			return (False, (E_FILEMOVE_CODE, 'Destination dir does not exist'))
 		if (Config.checkExistence(desFile, TYPE_FILE) > 0):
 			#print 'catFile getDestinationFileName exists'
 			return (False, (E_FILEEXIST_CODE, E_FILEEXIST_MSG))

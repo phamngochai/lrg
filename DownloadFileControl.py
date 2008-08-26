@@ -66,7 +66,7 @@ class DownloadFileControl:
 		#print 'Trying #', self.downloadFile.getRetry(), ' ', self.downloadFile.getId()
 		self.control.report(self.downloadFile, updateType = [RETRY_COL])
 		self.htmlBody = ''
-		self.downloadPartControlList = []
+		#self.downloadPartControlList = []
 		self.isChecking = False
 		self.curlClass = CurlClass(self.downloadFile.getId())
 
@@ -291,22 +291,29 @@ class DownloadFileControl:
 		
 		
 	def doneSaveFile(self, results = None):
-		if results :
+		if results:
 			result, errors = results
 		#print 'CALLBACK FROM SaveFileControl ', self.downloadFile.getId(), ' ', result, ' ', errors
 		for downloadPartControl in self.downloadPartControlList:			
 			downloadPartControl.resetInUse()
-		self.downloadFile.setStatus(STAT_Z)
-		self.control.report(self.downloadFile, updateType = [FILESTATUS_COL])
-		self.control.finishFile(self.downloadFile)
-		self.reset()
+			
+		if result:
+			self.downloadFile.setStatus(STAT_Z)
+			self.control.report(self.downloadFile, updateType = [FILESTATUS_COL])
+			self.control.finishFile(self.downloadFile)
+			self.reset()
+		else:
+			errorCode, errorStr = errors 
+			self.reportError(errorStr)
 			
 
 
 	def getDownloadPartControl(self):		 	
 		for downloadPartControl in self.downloadPartControlList:
 			if not downloadPartControl.isInUse() :
+				self.log.debug('DownloadFileControl, found DownloadPartControl')
 				return downloadPartControl
+		self.log.debug('DownloadFileControl, NO DownloadPartControl CAN BE USE, downloadPartControlList is:', len(self.downloadPartControlList))
 		return None
 
 
@@ -338,8 +345,6 @@ class DownloadFileControl:
 			#download = DownloadFileControl(self.log, self.downloadFile, self.control)
 			#download.start()
 			#self.downloadFile.setStatus(STAT_D)
-
-
 
 
 
@@ -416,7 +421,8 @@ class DownloadFileControl:
 					#print '>>> PART: ', i, ' SIZE on disk: ', currentSize, ' Rollbacksize: ', Config.getResumeSize(), ' RANGE IS: ', dlrange
 					#print 'DownloadFileControl, processHeader, create DownloadPartControl Thread'
 					downloadPartControl = self.getDownloadPartControl()
-					if not downloadPartControl :
+					if downloadPartControl is None:
+						self.log.debug('DownloadFileControl, no downloadPartControl avail, create new', self.downloadFile.getId())
 						downloadPartControl = DownloadPartControl(downloadPart, self)
 						self.downloadPartControlList.append(downloadPartControl)
 					else:
@@ -434,7 +440,8 @@ class DownloadFileControl:
 					#print '>>> PART: ', i, ' SIZE on disk: ', currentSize, ' Rollbacksize: ', Config.getResumeSize(), ' RANGE IS: ', dlrange
 					#print 'DownloadFileControl, processHeader, create DownloadPartControl Thread'
 					downloadPartControl = self.getDownloadPartControl()
-					if not downloadPartControl :
+					if downloadPartControl is None:
+						self.log.debug('DownloadFileControl, no downloadPartControl avail, create new', self.downloadFile.getId())
 						downloadPartControl = DownloadPartControl(downloadPart, self)
 						self.downloadPartControlList.append(downloadPartControl)
 					else:
@@ -442,7 +449,7 @@ class DownloadFileControl:
 					#downloadPartControl.start()
 					downloadPartControl.run()
 	
-					self.downloadPartControlList.append(downloadPartControl)
+					#self.downloadPartControlList.append(downloadPartControl)
 
 			if self.downloadFile.getStatus() == STAT_S :
 				self.stop()

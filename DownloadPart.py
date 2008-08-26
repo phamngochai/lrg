@@ -31,7 +31,7 @@ class DownloadPart(DownloadFile):
 		self.completed = False
 		self.seekPos = 0
 		self.resuming = False
-		#self.log = Log()
+		self.log = Log()
 		
 	
 	#def getRetry(self):
@@ -101,7 +101,7 @@ class DownloadPart(DownloadFile):
 	def isCompleted(self):
 		#return self.completed
 		realPartSize = Config.getPartSize(self.getFileSize(), self.getNumberOfPart(), self.getPartNo())
-		if (self.getByteDownloaded() == realPartSize):
+		if self.getByteDownloaded() == realPartSize:
 			#print 'self.getByteDownloaded() ', self.getByteDownloaded(), ' ', self.getTmpFileName()
 			#print 'self.getPartSize() ', self.getPartSize(), ' ', self.getTmpFileName()
 			#print 'isCompleted() is True ', self.getTmpFileName()
@@ -112,7 +112,7 @@ class DownloadPart(DownloadFile):
 			
 		
 	def isRetryPossible(self):
-		if (self.retry + 1 > Config.settings.maxRetry):
+		if self.retry + 1 > Config.settings.maxRetry:
 			return False
 		else:
 			return True
@@ -139,8 +139,8 @@ class DownloadPart(DownloadFile):
 		#print 'DownloadPart partSize', partSize
 		#print 'DownloadPart fileSize', fileSize
 		
-		if (Config.checkExistence(tmpFileName, 'F') >= 0 ):
-			#self.log.debug('DownloadPart, tmp file does exist', self.getId())
+		if Config.checkExistence(tmpFileName, 'F') > NO_EXIST:
+			self.log.debug('DownloadPart, tmp file EXIST', self.getId())
 			self.setResuming(True)
 			
 			currentSize = os.path.getsize(tmpFileName)			
@@ -149,26 +149,26 @@ class DownloadPart(DownloadFile):
 			
 			realPartSize = Config.getPartSize(fileSize, self.getNumberOfPart(), partNo)
 			
-			if (currentSize > realPartSize):
+			if currentSize > realPartSize:
 				#self.log.debug('setRange BIGGER FILESIZE found, will be overwriten now', self.getId())
 				currentSize = 0
 			
 			resumeSize = Config.settings.resumeSize
 			seekPos = currentSize - resumeSize
-			if (seekPos < 0):
+			if seekPos < 0:
 				seekPos = 0
 			
 			self.setFileSeekPos(seekPos)
 			self.setByteSaved(seekPos)
 
-			if (currentSize > resumeSize):
+			if currentSize > resumeSize:
 				beginPos = int(partNo * partSize) + currentSize - resumeSize
 			else:
 				beginPos = int(partNo * partSize)
 						
 			endPos = int((partNo + 1) * partSize - 1)
 			
-			if (endPos >= fileSize):
+			if endPos >= fileSize:
 				endPos = fileSize - 1
 				
 			downloadRange = str(beginPos) + '-' + str(endPos)
@@ -178,13 +178,10 @@ class DownloadPart(DownloadFile):
 			#self.log.debug('DownloadPart, tmp file does not exist', self.getId())
 			beginPos = int(partNo * partSize)
 			endPos = int((partNo + 1) * partSize - 1)
-			if (endPos >= fileSize):
+			if endPos >= fileSize:
 				endPos = fileSize - 1
 			downloadRange = str(beginPos) + '-' + str(endPos)
 			
 		#print 'DownloadPart downloadRange', downloadRange
 			
-		self.setDownloadRange(downloadRange)		
-		
-		
-		
+		self.setDownloadRange(downloadRange)

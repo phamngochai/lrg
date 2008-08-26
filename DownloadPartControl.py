@@ -17,7 +17,7 @@ class DownloadPartControl:
 		#threading.Thread.__init__(self)
 		self.toContinue = True
 		#self.conf = Config()
-		#self.log = Log()
+		self.log = Log()
 		self.downloadFileControl = downloadFileControl
 		self.byteDownloaded = 0
 		self.downloadPart = downloadPart
@@ -27,7 +27,7 @@ class DownloadPartControl:
 		self.inUse = True
 		
 		self.curlClass = CurlClass(self.downloadPart.getId())
-		#self.log.debug('Created curl object', self.downloadPart.getId())
+		self.log.debug('DownloadPartControl, Created curl object', self.downloadPart.getId())
 		self.curl = None
 
 		
@@ -42,7 +42,7 @@ class DownloadPartControl:
 		self.fileObj = None
 		self.reportedTime = 0
 		self.toDelete = False
-		self.inUse = True	
+		self.inUse = True
 		
 		
 	def stop(self):
@@ -79,7 +79,7 @@ class DownloadPartControl:
 			self.curlClass.setDownloadRange(self.downloadPart.getDownloadRange())
 			self.curlClass.setFormInfo(self.downloadPart.getFileURL())
 			
-			if (Config.checkServerURL(self.downloadPart.getFileURL(), RAPIDSHARE)):
+			if Config.checkServerURL(self.downloadPart.getFileURL(), RAPIDSHARE):
 				#print 'DownloadPartControl Setting cookie ', self.downloadPart.getId()
 				self.curlClass.setCookie()
 				
@@ -143,6 +143,8 @@ class DownloadPartControl:
 		if not self.toContinue or self.toDelete :
 			return 1
 		try:
+			if len(buf) == 0:
+				self.log.debug('downloadPartControl, this part may be done', self.downloadPart.getId())
 			self.fileObj.write(buf)
 			self.downloadPart.addByteDownloaded(len(buf))
 				

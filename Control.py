@@ -22,7 +22,7 @@ class Control(threading.Thread):
 		#Config.load()
 		self.saveFileControl = SaveFileControl()
 		self.saveFileControl.start()
-		#self.log = Log()
+		self.log = Log()
 		self.toContinue = True
 		self.isStopped = True
 		self.queueingCurlObjectList = []
@@ -279,7 +279,7 @@ class Control(threading.Thread):
 					break
 				
 
-			while (True):
+			while True:
 			
 				num_q, ok_list, err_list = multiHandler.info_read()
 				
@@ -291,21 +291,22 @@ class Control(threading.Thread):
 					#print 'httpCode ', httpCode
 					for downloadFileControl in self.downloadFileControlList:
 						#print 'Debug ', downloadFileControl
-						#print 'Checking ', downloadFileControl.getDownloadFile().getId(), ' ', c.downloadFileId
-						if (downloadFileControl.getDownloadFile().getId() == c.downloadFileId):
-							if (c.partNo != None):
+						self.log.debug('Control OK list checking', downloadFileControl.getDownloadFile().getId(), c.downloadFileId)
+						if downloadFileControl.getDownloadFile().getId() == c.downloadFileId:
+							if not c.partNo is None:
+								self.log.debug('Control curl object is downloadPartControl, checkFisnih now')
 								downloadFileControl.checkFinish()
 								#downloadFileControl.reset()		
 								break
 								
-							if (httpCode == 404):
-								#print 'Success Reseting 404', downloadFileControl.getDownloadFile().getId()
+							if httpCode == 404:
+								self.log.debug('Control OK list 404', downloadFileControl.getDownloadFile().getId())
 								downloadFileControl.getDownloadFile().setStatus(STAT_E)
 								downloadFileControl.getDownloadFile().setErrorStr('404 File not found')
 								self.mainFrame.update(downloadFileControl.getDownloadFile())										
 								downloadFileControl.reset()
-							elif (downloadFileControl.isDone() == False	and  downloadFileControl.isBusy() == False):								
-								#print 'Success Continue ', downloadFileControl.getDownloadFile().getId()
+							elif (not downloadFileControl.isDone()) and (not downloadFileControl.isBusy()):								
+								self.log.debug('Control OK list continueBuildCurl', downloadFileControl.getDownloadFile().getId())
 								downloadFileControl.continueBuildCurl()
 							break
    						#print 'Success: ', c.downloadFileId
@@ -318,33 +319,35 @@ class Control(threading.Thread):
   					#print 'err_list httpCode ', httpCode
 					for downloadFileControl in self.downloadFileControlList:
 						#print 'Debug ', downloadFileControl
-						if (downloadFileControl.getDownloadFile().getId() == c.downloadFileId):						
-
-							if (not errno in (pycurl.E_ABORTED_BY_CALLBACK, pycurl.E_PARTIAL_FILE, pycurl.E_WRITE_ERROR)):				
-								if (downloadFileControl.getDownloadFile().isRetryPossible()):
+						if downloadFileControl.getDownloadFile().getId() == c.downloadFileId:
+							self.log.debug('Control ERROR list checking', downloadFileControl.getDownloadFile().getId(), c.downloadFileId)
+							if not errno in (pycurl.E_ABORTED_BY_CALLBACK, pycurl.E_PARTIAL_FILE, pycurl.E_WRITE_ERROR):
+								self.log.debug('Control ERROR list unexpected error')				
+								if downloadFileControl.getDownloadFile().isRetryPossible():
+									self.log.debug('Control ERROR list retrying')
 									downloadFileControl.getDownloadFile().setStatus(STAT_E)
 									downloadFileControl.getDownloadFile().setErrorStr(errmsg)
 									self.mainFrame.update(downloadFileControl.getDownloadFile(), updateType = [FILESTATUS_COL, FILEERROR_COL])								
-									if (c.partNo != None):
-										#print 'downloadPart failed, resetitng part'
+									if not c.partNo is None:
+										self.log.debug('Control ERROR list downloadPart failed, resetting part')
 										downloadFileControl.resetPart(c.partNo)		
 									else:
-										#print 'downloadFile failed, resetitng file'
+										self.log.debug('Control ERROR list downloadFile failed, continueBuildCurl')
 										downloadFileControl.continueBuildCurl(True)
-
-								else:						
+								else:
+									self.log.debug('Control ERROR list no more retry possible, report error')					
 									downloadFileControl.reportError(errmsg)
 									
 								break
 														
-							if (httpCode == 404):
-								#print 'Fail resetting 404'
+							if httpCode == 404:
+								self.log.debug('Control ERROR list 404')
 								downloadFileControl.getDownloadFile().setStatus(STAT_E)
 								downloadFileControl.getDownloadFile().setErrorStr('404 File not found')
 								self.mainFrame.update(downloadFileControl.getDownloadFile())
 								downloadFileControl.reset()
-							elif (downloadFileControl.isDone() == False and  downloadFileControl.isBusy() == False):
-								#print 'err_list Fail curlObject ', downloadFileControl.getDownloadFile().getId(), ' errno ', errno, ' errmsg ', errmsg
+							elif (not downloadFileControl.isDone()) and (not downloadFileControl.isBusy()):
+								self.log.debug('Control ERROR list continueBuildCurl', downloadFileControl.getDownloadFile().getId())
 								downloadFileControl.continueBuildCurl()
 							break
   					#print 'err_list Failed: ', ' errno ', errno, ' errmsg ', errmsg 
