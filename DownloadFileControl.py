@@ -134,15 +134,19 @@ class DownloadFileControl:
 		self.control.addCurlObject(curlObject)
 
 	def run(self):		
-
-		if (self.isKilled):
+		
+		self.log.debug('DownloadFileControl run')
+		
+		if self.isKilled:
+			self.log.debug('DownloadFileControl isKill')
 			return
 		
-		if (self.downloadFile == None):
+		if self.downloadFile is None:
+			self.log.debug('DownloadFileControl no downloadFile')
 			return
 			#continue
 			
-		if (self.gotJob):
+		if self.gotJob:
 			self.done = False
 			self.busy = True
 			

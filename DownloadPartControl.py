@@ -43,7 +43,7 @@ class DownloadPartControl:
 		self.reportedTime = 0
 		self.toDelete = False
 		self.inUse = True
-		
+		self.curlClass.setDownloadFileId(self.downloadPart.getId())
 		
 	def stop(self):
 		self.toContinue = False
@@ -57,10 +57,12 @@ class DownloadPartControl:
 			
 		try:
 		
+			#self.log.debug('DownloadPartControl run')
+						
 			self.downloadPart.setRange()
 			
 			if self.downloadPart.isCompleted() :
-				#self.log.debug('THIS PART IS COMPLETED, QUIT', self.downloadPart.getId())
+				self.log.debug('DownloadPartControl THIS PART IS COMPLETED, QUIT', self.downloadPart.getId())
 				#self.downloadFileControl.finishPart(self.downloadPart)
 				return
 			
