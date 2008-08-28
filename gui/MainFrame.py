@@ -227,8 +227,8 @@ class MainFrame(wx.Frame):
 
 	def onRedownload(self, event):
 		for id in self.selectedIds:
-			self.control.addURL(id)
-					
+			self.control.addURLById(id)
+			self.control.deleteDownloadBot(id)
 
 	def onDeleteBot(self, event):
 		for id in self.selectedIds:

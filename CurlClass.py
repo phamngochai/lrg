@@ -14,6 +14,9 @@ class CurlClass:
 		if Config.settings.useProxy:
 			self.curl.setopt(pycurl.PROXY, Config.settings.proxyAddr)
 			self.curl.setopt(pycurl.PROXYPORT, Config.settings.proxyPort)			
+			if Config.settings.proxyUsername != '':
+				print 'Setting proxy user/pass'
+				self.curl.setopt(pycurl.PROXYUSERPWD, Config.settings.proxyUsername + ':' + Config.settings.proxyPassword)
 		
 		#self.curl.setopt(pycurl.HTTPHEADER, ['User-Agent: firefox-bin'])
 		self.curl.setopt(pycurl.FOLLOWLOCATION, 1)

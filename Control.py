@@ -73,6 +73,10 @@ class Control(threading.Thread):
 		self.downloadFileList.addQueueingFile(downloadFile)		
 		self.mainFrame.addDownloadFileToList(downloadFile, PANEL_TOP)
 	
+	def addURLById(self, id):
+		downloadFile = self.downloadFileList.getDownloadFileById(id, False)
+		self.addURL(downloadFile.getFileURL())
+	
 	#Stop all downloads, save the queueing list then quit
 	def exit(self):
 		self.toContinue = False

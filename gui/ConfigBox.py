@@ -152,11 +152,31 @@ class ConfigBox(wx.Frame):
 		self.proxySettingsSizer.Add(self.proxyTypeSizer, 2, wx.EXPAND, PADDING)
 		#self.proxySettingsSizer.Add(self.proxyAddrSizer, 2, wx.EXPAND, PADDING)
 		self.proxySettingsSizer.Add(self.proxyPortSizer, 1, wx.EXPAND, PADDING)
-		
-		
+				
 		self.proxyBoxSizer.Add(self.useProxy, 0, wx.EXPAND)
 		self.proxyBoxSizer.Add(self.proxyAddrSizer, 0, wx.EXPAND)
 		self.proxyBoxSizer.Add(self.proxySettingsSizer, 0, wx.EXPAND)
+		
+		self.proxyUserPassSizer = wx.BoxSizer(wx.HORIZONTAL)
+
+		self.proxyUserSizer = wx.BoxSizer(wx.VERTICAL)		
+		self.proxyUserNameLbl = wx.StaticText(self.networkSettingsPanel, wx.ID_ANY, 'Username:')
+		self.proxyUsername = wx.TextCtrl(self.networkSettingsPanel, wx.ID_ANY)
+		self.proxyUsername.SetValue(str(Config.settings.proxyUsername))
+		self.proxyUserSizer.Add(self.proxyUserNameLbl, 0, wx.EXPAND)
+		self.proxyUserSizer.Add(self.proxyUsername, 0, wx.EXPAND)
+
+		self.proxyPasswordSizer = wx.BoxSizer(wx.VERTICAL)
+		self.proxyPasswordLbl = wx.StaticText(self.networkSettingsPanel, wx.ID_ANY, 'Password:')
+		self.proxyPassword = wx.TextCtrl(self.networkSettingsPanel, wx.ID_ANY)
+		self.proxyPassword.SetValue(str(Config.settings.proxyPassword))
+		self.proxyPasswordSizer.Add(self.proxyPasswordLbl, 0, wx.EXPAND)
+		self.proxyPasswordSizer.Add(self.proxyPassword, 0, wx.EXPAND)
+		
+		self.proxyUserPassSizer.Add(self.proxyUserSizer, 1, wx.EXPAND)
+		self.proxyUserPassSizer.Add(self.proxyPasswordSizer, 1, wx.EXPAND)
+		
+		self.proxyBoxSizer.Add(self.proxyUserPassSizer, 0, wx.EXPAND)
 		
 		self.networkSettingsSizer.Add(self.proxyBoxSizer, 0, wx.EXPAND)			
 		
@@ -249,6 +269,8 @@ class ConfigBox(wx.Frame):
 		Config.settings.proxyType = proxyTypeCurlList[self.proxyTypeList.GetValue()]
 		Config.settings.proxyAddr = str(self.proxyAddr.GetValue())
 		Config.settings.proxyPort = int(self.proxyPort.GetValue())
+		Config.settings.proxyUsername = str(self.proxyUsername.GetValue())
+		Config.settings.proxyPassword = str(self.proxyPassword.GetValue())		
 		
 		Config.save()
 		self.Destroy()

@@ -37,6 +37,8 @@ class Config:
 			Config.settings.proxyType = proxyTypeCurlList[proxyTypeList[0]]
 			Config.settings.proxyAddr = str(PROXYADDR)
 			Config.settings.proxyPort = PROXYPORT
+			Config.settings.proxyUsername = PROXY_USERNAME
+			Config.settings.proxyPassword = PROXY_PASSWORD 
 			Config.settings.rapidshareUsername = RAPIDSHARE_USERNAME
 			Config.settings.rapidsharePassword = RAPIDSHARE_PASSWORD
 			Config.settings.currentId = CURRENT_ID
@@ -68,6 +70,7 @@ class Config:
 		
 		if errStr != '':
 			print "Error:\n" + errStr
+			print "Please check the permissions or delete config file at: ", SETTINGS_FILE
 			sys.exit() 
 	
 	def save():

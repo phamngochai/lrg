@@ -75,18 +75,20 @@ class DownloadFileList:
 		i = 0
 		self.completedFileListLock.acquire()
 		for downloadFile in self.completedFileList:
-			if (downloadFile.getId() == id):
-				if (moveToDownload == None):
+			if downloadFile.getId() == id:
+				if moveToDownload is None:
 					del self.completedFileList[i]
+					self.completedFileListLock.release()
+					return
 				else:
 					downloadFile = self.completedFileList.pop(i)
 					self.downloadFileListLock.acquire()
 					self.downloadFileList.append(downloadFile)
 					self.downloadFileListLock.release()
-				break
+					self.completedFileListLock.release()
+					return
 			i += 1
-		self.completedFileListLock.release()
-		
+		self.completedFileListLock.release()		
 			
 
 			
@@ -120,13 +122,22 @@ class DownloadFileList:
 		self.downloadFileListLock.release()
 				
 				
-	def getDownloadFileById(self, id):
-		self.downloadFileListLock.acquire()
-		for downloadFile in self.downloadFileList:
-			if (downloadFile.getId() == id):
-				self.downloadFileListLock.release()
-				return downloadFile
-		self.downloadFileListLock.release()
+	def getDownloadFileById(self, id, fromQueueingList = True):
+		if fromQueueingList:
+			self.downloadFileListLock.acquire()			
+			for downloadFile in self.downloadFileList:
+				if (downloadFile.getId() == id):
+					self.downloadFileListLock.release()
+					return downloadFile
+			self.downloadFileListLock.release()
+		else:
+			self.completedFileListLock.acquire()
+			for downloadFile in self.completedFileList:
+				if (downloadFile.getId() == id):
+					self.completedFileListLock.release()
+					return downloadFile
+			self.completedFileListLock.release()
+				
 		
 		
 	def changeStatus(self, id, status):
