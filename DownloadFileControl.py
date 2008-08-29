@@ -196,7 +196,7 @@ class DownloadFileControl:
 				self.gotJob = False
 				
 			except pycurl.error, e:
-				#print 'DownloadFileControl pycurl.error: ', e
+				self.log.debug('DownloadFileControl pycurl.error:', e, self.downloadFile.getId())
 				error = str(e)
 				if error.find('(') == -1 or error.find(',') == -1 :
 					return
@@ -216,7 +216,7 @@ class DownloadFileControl:
 						#self.run()
 					
 			except Exception, e:
-				pass
+				self.log.debug('DownloadFileControl Exception:', e, self.downloadFile.getId())
 				#print 'DownloadFileControl Exception: ', self.downloadFile.getId(), ' ', e
 				#if(self.downloadFile.isRetryPossible()):
 					#self.downloadFile.increaseRetry()

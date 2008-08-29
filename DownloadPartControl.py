@@ -97,7 +97,7 @@ class DownloadPartControl:
 			#print 'DownloadPartControl added curlObject ', self.downloadPart.getId()
 		
 		except pycurl.error, e:
-			#self.log.debug('DownloadPartControl Exception', self.downloadPart.getId(), pycurl.error, e)
+			self.log.debug('DownloadPartControl Exception pycurl.error', pycurl.error, e, self.downloadPart.getId(),)
 			self.fileObj.flush()
 			self.fileObj.close()
 				
@@ -111,6 +111,7 @@ class DownloadPartControl:
 				errorStr = error[error.find('"') + 1 : error.rfind(')') - 1]				
 				self.downloadFileControl.reportError(errorStr)
 		except IOError, e:
+			self.log.debug('DownloadPartControl Exception IOError', e, self.downloadPart.getId(),)
 			if self.fileObj and not self.fileObj.closed :
 				self.fileObj.flush()
 				self.fileObj.close()		
@@ -152,6 +153,7 @@ class DownloadPartControl:
 				
 			#print 'partSize ', self.downloadPart.getPartSize(), ' downloaded ', self.downloadPart.getByteDownloaded()
 		except IOError, e:
+			self.log.debug('downloadPartControl writeBody IOError', e, self.downloadPart.getId())
 			self.fileObj.flush()
 			self.fileObj.close()
 			self.downloadFileControl.reportError(str(e))
@@ -176,7 +178,7 @@ class DownloadPartControl:
 				
 		#What can be wrong here?
 		except Exception, e:			
-			#self.log.debug('DownloadPartControl progressBody Exception', self.downloadPart.getId(), e)
+			self.log.debug('DownloadPartControl progressBody Exception', e, self.downloadPart.getId())
 			return 1
 	
 	

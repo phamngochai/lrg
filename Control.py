@@ -35,6 +35,7 @@ class Control(threading.Thread):
 				queueingFile.close()
 			except EOFError:
 				self.downloadFileList = DownloadFileList()
+				self.log.debug('EXCEPTION Control', EOFError)
 				#self.log.debug('Queueing file error')				
 			self.downloadFileList.setLock()
 			self.downloadFileList.resetStatus(STAT_S)
@@ -298,7 +299,7 @@ class Control(threading.Thread):
 						self.log.debug('Control OK list checking', downloadFileControl.getDownloadFile().getId(), c.downloadFileId)
 						if downloadFileControl.getDownloadFile().getId() == c.downloadFileId:
 							if not c.partNo is None:
-								self.log.debug('Control curl object is downloadPartControl, checkFinish now')
+								self.log.debug('Control curl object belongs to downloadPartControl, checkFinish now')
 								downloadFileControl.checkFinish()
 								#downloadFileControl.reset()		
 								break

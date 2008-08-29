@@ -7,14 +7,14 @@ D downloadFileControl fileexist
 D use thread to move tmp files
 D reuse objects
 D right click file property
-- proxy auth
+D proxy auth
 D Save downloaded list
 D Redownload
 - Reset password, change rp account
 - Speed limit
 D Color line
 - change download order
-- Separate setting and queueing file
+D Separate setting and queueing file
 - Ctrl+A, Del...
 D Percentage
 D Download dir button

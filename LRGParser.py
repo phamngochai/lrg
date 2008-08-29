@@ -17,7 +17,8 @@ class LRGParser(HTMLParser.HTMLParser):
 	def feed(self, htmlBody):
 		try:
 			HTMLParser.HTMLParser.feed(self, htmlBody)			
-		except HTMLParser.HTMLParseError:
+		except HTMLParser.HTMLParseError, e:
+			self.log.debug('LRGParser HTMLParser.HTMLParseError', e)
 			if self.linkType == URLCASH:
 				tmpHTMLBody = htmlBody
 				pos = tmpHTMLBody.find(URLCASH_IFRAME)

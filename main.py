@@ -9,12 +9,14 @@ from ConfigUtils import Config
 from Log import Log
 
 #pyCurl does not like signal
+log = Log()
 try:
 	import signal
 	from signal import SIGPIPE, SIG_IGN
 	signal.signal(signal.SIGPIPE, signal.SIG_IGN)
-except ImportError:
-	pass
+except ImportError, e:
+	log.debug('Main ImportError', e)
+	print 'Cannot handle signal...'
 	
 Config.load()
 
