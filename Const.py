@@ -114,6 +114,8 @@ SETTINGS_FILE = os.path.join(CONFIG_DIR, 'settings.save')
 DOWNLOAD_DIR = os.path.join(CONFIG_DIR, 'Downloads')
 REL_LOGOFILE = os.path.join('gui','images','tux.png')
 LOGOFILE = os.path.join(RUNNING_PATH, REL_LOGOFILE)
+REL_ICONFILE = os.path.join('gui', 'images', 'icon.png')
+ICONFILE = os.path.join(RUNNING_PATH, REL_ICONFILE)
 TMP_DIR = os.path.join(DOWNLOAD_DIR, '.tmp')
 TMP_EXT = '.part'
 

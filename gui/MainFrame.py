@@ -40,7 +40,7 @@ ID_DELE_POP_BOT = 4002
 class MainFrame(wx.Frame):
 	def __init__(self, parent, id, title, pos, size, control):
 		wx.Frame.__init__(self, parent, id, title, pos, size)
-		self.SetIcon(wx.Icon(os.path.join('gui', 'images', 'icon.png'), wx.BITMAP_TYPE_PNG))
+		self.SetIcon(wx.Icon(ICONFILE, wx.BITMAP_TYPE_PNG))
 		
 		self.control = control
 		self.log = Log()
