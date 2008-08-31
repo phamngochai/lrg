@@ -12,8 +12,11 @@ class Log:
 		self.log.addHandler(self.rotatingFileHandler)
 	
 	def debug(self, *args):
+		
+		msg = ''
+		for arg in args:
+			msg += str(arg) + ' '
 		if LOG:
-			msg = ''
-			for arg in args:
-				msg += str(arg) + ' '
 			self.log.debug(msg)
+		if DEBUG:
+			print 'DEBUG: ', msg
