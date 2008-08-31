@@ -9,6 +9,7 @@ from TextBox import TextBox
 from ConfigBox import ConfigBox
 from AboutBox import AboutBox
 from DownloadFilePropBox import DownloadFilePropBox
+from TrayIcon import TrayIcon
 from Const import *
 from Log import Log
 
@@ -39,6 +40,7 @@ ID_DELE_POP_BOT = 4002
 class MainFrame(wx.Frame):
 	def __init__(self, parent, id, title, pos, size, control):
 		wx.Frame.__init__(self, parent, id, title, pos, size)
+		self.SetIcon(wx.Icon(os.path.join('gui', 'images', 'icon.png'), wx.BITMAP_TYPE_PNG))
 		
 		self.control = control
 		self.log = Log()
@@ -91,6 +93,7 @@ class MainFrame(wx.Frame):
 		self.botPopupMenu.Append(ID_DELE_POP_BOT, '&Delete', 'Delete')
 	
 		
+		self.trayIcon = TrayIcon(self.GetIcon(), "Linux Rapidshare Grabber", self)
 		
 		wx.EVT_MENU(self, ID_PASTE, self.onPaste)
 		wx.EVT_MENU(self, ID_OPEN, self.onOpen)
@@ -113,6 +116,8 @@ class MainFrame(wx.Frame):
 		wx.EVT_MENU(self, ID_ABOUT, self.onAbout)
 		
 		wx.EVT_CLOSE(self, self.onExit)
+
+		self.Bind(wx.EVT_ICONIZE, self.onIconize)
 		
 		self.splitter = wx.SplitterWindow(self, wx.ID_ANY)
 		self.splitter.SetBorderSize(20)
@@ -257,6 +262,7 @@ class MainFrame(wx.Frame):
 		
 		
 	def quitNow(self):
+		self.trayIcon.Destroy()
 		self.Destroy()
 		
 
@@ -283,3 +289,7 @@ class MainFrame(wx.Frame):
 			wx.CallAfter(self.panelTop.deleteAllDownloadFile)
 		else:
 			wx.CallAfter(self.panelBop.deleteAllDownloadFile)
+
+	def onIconize(self, e):
+		if self.IsIconized():
+			self.Hide()
