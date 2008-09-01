@@ -61,7 +61,14 @@ class DownloadFilePropBox(wx.Frame):
 		self.numberOfPartText = wx.StaticText(self.panel, wx.ID_ANY, 'Number of part: ')
 		self.numberOfPartTextValue = wx.StaticText(self.panel, wx.ID_ANY, str(self.downloadFile.getNumberOfPart()))
 		self.numberOfPartTextSizer.Add(self.numberOfPartText, 0, wx.EXPAND)
-		self.numberOfPartTextSizer.Add(self.numberOfPartTextValue, 0, wx.EXPAND)		
+		self.numberOfPartTextSizer.Add(self.numberOfPartTextValue, 0, wx.EXPAND)
+		
+		self.passwordSizer = wx.BoxSizer(wx.HORIZONTAL)
+		self.passwordTextLable = wx.StaticText(self.panel, wx.ID_ANY, 'Password: ')
+		self.passwordText = wx.TextCtrl(self.panel, wx.ID_ANY)
+		self.passwordText.SetValue(str(self.downloadFile.getAccessPassword()))
+		self.passwordSizer.Add(self.passwordTextLable, 0, wx.EXPAND)
+		self.passwordSizer.Add(self.passwordText, 0, wx.EXPAND)
 
 		self.buttonsSizer = wx.BoxSizer(wx.HORIZONTAL)
 		self.okBut = wx.Button(self.panel, ID_OK_BUT, 'OK')
@@ -82,6 +89,7 @@ class DownloadFilePropBox(wx.Frame):
 		self.mainSizer.Add(self.percentTextSizer, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.statusTextSizer, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.numberOfPartTextSizer, 0, wx.ALIGN_CENTER)
+		self.mainSizer.Add(self.passwordSizer, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.buttonsSizer, 0, wx.ALIGN_CENTER)
 		
 		self.panel.SetSizerAndFit(self.mainSizer)

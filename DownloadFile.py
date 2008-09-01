@@ -8,8 +8,8 @@ class DownloadFile:
 	def __init__(self, fileURL):
 		#self.conf = Config()
 		self.fileURL = str(fileURL)
-		#self.fileName = fileName
-		#self.completed = completed
+		self.accessUsername = ''
+		self.accessPassword = ''		
 		self.percentage = 0
 		self.formInfo = None
 		self.formAction = None
@@ -118,6 +118,10 @@ class DownloadFile:
 		return self.linkType
 	
 	
+	def getAccessPassword(self):
+		return self.accessPassword	
+	
+	
 
 	def setFileURL(self, fileURL):
 		self.fileURL = fileURL
@@ -160,6 +164,10 @@ class DownloadFile:
 	def setResumable(self, resumable):
 		self.resumable = resumable
 	
+
+	def setAccessPassword(self, password):
+		self.accessPassword = password
+		
 		
 	def isRetryPossible(self):
 		if (self.retry + 1 > Config.settings.maxRetry):
