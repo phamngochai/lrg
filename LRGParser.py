@@ -46,9 +46,18 @@ class LRGParser(HTMLParser.HTMLParser):
 					if (tupleTwo.find('accountid') != -1 and self.toAddPassword):
 						self.valList.append({tupleTwo: Config.settings.rapidshareUsername})
 						continue
-					if (tupleTwo.find('password') != -1 and self.toAddPassword):
-						self.valList.append({tupleTwo: Config.settings.rapidsharePassword})
-						continue
+					if tupleTwo.find('password') != -1:						
+						if self.linkType == RAPIDSHARE_FOLDER:							
+							downloadFile = self.downloadFileControl.getDownloadFile()
+							#print 'Parser password',  downloadFile.getAccessPassword() 
+							if downloadFile.getAccessPassword() == '':
+								self.downloadFileControl.reportError('This folder needs password to access')
+							else:
+								self.valList.append({tupleTwo: downloadFile.getAccessPassword()})
+							continue
+					 	if self.toAddPassword:
+							self.valList.append({tupleTwo: Config.settings.rapidsharePassword})
+							continue
 					name = tupleTwo
 					foundVar = True
 				elif ((tupleOne.find('value') != -1) and (foundVar) and (tupleTwo.find('Free') == -1)):

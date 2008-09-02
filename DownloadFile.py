@@ -9,7 +9,7 @@ class DownloadFile:
 		#self.conf = Config()
 		self.fileURL = str(fileURL)
 		self.accessUsername = ''
-		self.accessPassword = ''		
+		self.accessPassword = ''
 		self.percentage = 0
 		self.formInfo = None
 		self.formAction = None

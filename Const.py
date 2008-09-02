@@ -4,7 +4,7 @@ import time
 import pycurl
 
 
-DEBUG = 0
+DEBUG = 1
 LOG = 1
 
 VERSION = '0.1.2'
@@ -170,6 +170,9 @@ errorList.append('Your Premium Account has not been found')
 errorList.append('Invalid login')
 errorList.append('Invalid password')
 errorList.append('The Account has been found, but the password is incorrect')
+errorList.append('The password is not correct')
+
+
 
 E_FILEEXIST_CODE = 0
 E_FILEEXIST_MSG = 'Destination file exists'

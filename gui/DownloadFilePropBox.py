@@ -63,12 +63,13 @@ class DownloadFilePropBox(wx.Frame):
 		self.numberOfPartTextSizer.Add(self.numberOfPartText, 0, wx.EXPAND)
 		self.numberOfPartTextSizer.Add(self.numberOfPartTextValue, 0, wx.EXPAND)
 		
-		self.passwordSizer = wx.BoxSizer(wx.HORIZONTAL)
-		self.passwordTextLable = wx.StaticText(self.panel, wx.ID_ANY, 'Password: ')
-		self.passwordText = wx.TextCtrl(self.panel, wx.ID_ANY)
-		self.passwordText.SetValue(str(self.downloadFile.getAccessPassword()))
-		self.passwordSizer.Add(self.passwordTextLable, 0, wx.EXPAND)
-		self.passwordSizer.Add(self.passwordText, 0, wx.EXPAND)
+		if self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER:
+			self.passwordSizer = wx.BoxSizer(wx.HORIZONTAL)
+			self.passwordTextLable = wx.StaticText(self.panel, wx.ID_ANY, 'Password: ')
+			self.passwordText = wx.TextCtrl(self.panel, wx.ID_ANY)
+			self.passwordText.SetValue(str(self.downloadFile.getAccessPassword()))
+			self.passwordSizer.Add(self.passwordTextLable, 0, wx.EXPAND)
+			self.passwordSizer.Add(self.passwordText, 0, wx.EXPAND)
 
 		self.buttonsSizer = wx.BoxSizer(wx.HORIZONTAL)
 		self.okBut = wx.Button(self.panel, ID_OK_BUT, 'OK')
@@ -77,9 +78,7 @@ class DownloadFilePropBox(wx.Frame):
 		wx.EVT_BUTTON(self, ID_CANCEL_BUT, self.onClickCancel)		
 		self.buttonsSizer.Add(self.okBut, 1, wx.EXPAND)	
 		self.buttonsSizer.Add(self.cancelBut, 1, wx.EXPAND)
-		
-		
-		
+				
 		
 		self.mainSizer.Add(self.urlSizer, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.fileNameTextSizer, 0, wx.ALIGN_CENTER)
@@ -89,7 +88,8 @@ class DownloadFilePropBox(wx.Frame):
 		self.mainSizer.Add(self.percentTextSizer, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.statusTextSizer, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.numberOfPartTextSizer, 0, wx.ALIGN_CENTER)
-		self.mainSizer.Add(self.passwordSizer, 0, wx.ALIGN_CENTER)
+		if self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER: 
+			self.mainSizer.Add(self.passwordSizer, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.buttonsSizer, 0, wx.ALIGN_CENTER)
 		
 		self.panel.SetSizerAndFit(self.mainSizer)
@@ -98,13 +98,20 @@ class DownloadFilePropBox(wx.Frame):
 		self.Show(True)
 		
 	def onClickOK(self, event):
-		if (self.urlField.GetValue().strip() != self.downloadFile.getFileURL()):
+		modified = False
+		if self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER:
+			if self.downloadFile.getAccessPassword() != self.passwordText.GetValue().strip():
+				#print 'setting password to ', self.passwordText.GetValue().strip()
+				self.downloadFile.setAccessPassword(self.passwordText.GetValue().strip())
+				modified = True
+		if self.urlField.GetValue().strip() != self.downloadFile.getFileURL():
 			self.downloadFile.setFileURL(self.urlField.GetValue())
+			modified = True
+		if modified:
 			if (self.downloadFile.getStatus() == STAT_D):
 				self.parent.setSelectedIds([self.downloadFile.getId()])
-				self.parent.onResetDownload(None)
-			else:
-				self.parent.update(self.downloadFile, [FILEURL_COL, FILESTATUS_COL, RETRY_COL])
+				self.parent.onResetDownload(None)			
+			self.parent.update(self.downloadFile, [FILEURL_COL, FILESTATUS_COL, RETRY_COL, FILEERROR_COL])
 		self.Destroy()
 				
 	def onClickCancel(self, event):
@@ -125,5 +132,7 @@ class DownloadFilePropBox(wx.Frame):
 		self.percentTextValue.SetLabel(self.downloadFile.getFormattedPercentage())
 		self.statusTextValue.SetLabel(str(downloadStatus[self.downloadFile.getStatus()]))
 		self.numberOfPartTextValue.SetLabel(str(self.downloadFile.getNumberOfPart()))
+		if self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER:
+			self.passwordText.SetValue(str(self.downloadFile.getAccessPassword()))
 	
 		

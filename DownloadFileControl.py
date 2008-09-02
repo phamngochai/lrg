@@ -325,20 +325,22 @@ class DownloadFileControl:
 		formInfo = {}
 		action = None
 		
-		if self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER or self.downloadFile.getLinkType() == URLCASH :
-			for link in linksDict.values():
-				self.control.addURL(link)
-			self.downloadFile.setStatus(STAT_Z)
-			self.control.finishFile(self.downloadFile)
-			self.reset()
-			return
+		if (self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER) or (self.downloadFile.getLinkType() == URLCASH):
+			if len(linksDict) != 0:
+				for link in linksDict.values():
+					self.control.addURL(link)
+				self.downloadFile.setStatus(STAT_Z)
+				self.control.finishFile(self.downloadFile)
+				self.reset()
+				return			
 			
 		for item in valList:
-			for key, value in item.items() :
-				if key.find('action') != -1 :
+			for key, value in item.items():
+				if key.find('action') != -1:
 					action = value
-					if action.find('/cgi-bin/premium.cgi') != -1 :
+					if (action.find('/cgi-bin/premium.cgi') != -1) or (action.find('/users/') != -1) :
 						action = 'http://rapidshare.com' + action
+						#print 'Action is ', action
 				else:
 					formInfo[key] = value
 		#print 'NEW LINKS: ' + action
@@ -355,21 +357,21 @@ class DownloadFileControl:
 	def processHeader(self, buf):
 		#print 'Header :', buf
 	
-		if buf.find(CONTENT_TYPE) != -1 :
+		if buf.find(CONTENT_TYPE) != -1:
 			fileType = buf[buf.find(':') + 2 : buf.find(';')]
 			self.downloadFile.setFileType(fileType)
 			#print 'processHeader, File type: ', fileType
 			
-		if buf.find(SET_COOKIE) != -1 :
+		if buf.find(SET_COOKIE) != -1:
 			cookie = buf[buf.find(':') + 2 : buf.find(';')]
 			Config.settings.cookie = cookie
 			
-		if buf.find(CONTENT_LENGTH) != -1 :
+		if buf.find(CONTENT_LENGTH) != -1:
 			fileSize = int(buf[buf.find(':') + 2 :])
 			self.downloadFile.setFileSize(fileSize)
 			#print 'processheader, File size: ', fileSize
 			
-		if buf.find(ACCEPT_RANGE) != 1 :
+		if buf.find(ACCEPT_RANGE) != 1:
 			self.downloadFile.setResumable(True)
 
 		
@@ -377,7 +379,10 @@ class DownloadFileControl:
 		
 		if self.downloadFile.getFileType() == TEXTHTML :
 			self.htmlBody += buf
-			if buf.find('</html>') != -1 :
+			if buf.find('</html>') != -1:
+				#print '================================'
+				#print self.htmlBody
+				#print '================================'				
 				toAddPassword = Config.checkServerURL(self.downloadFile.getFileURL(), RAPIDSHARE)
 				linkType = self.downloadFile.getLinkType()
 				parser = LRGParser(self, toAddPassword, linkType)
