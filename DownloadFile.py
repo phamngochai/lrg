@@ -166,6 +166,8 @@ class DownloadFile:
 	
 
 	def setAccessPassword(self, password):
+		self.formInfo = None
+		self.formAction = None
 		self.accessPassword = password
 		
 		

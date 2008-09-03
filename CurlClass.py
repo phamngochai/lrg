@@ -24,7 +24,7 @@ class CurlClass:
 		self.curl.setopt(pycurl.NOSIGNAL, 1)
 		self.curl.setopt(pycurl.CONNECTTIMEOUT, Config.settings.maxConnectionTimeout)
 		self.curl.setopt(pycurl.TIMEOUT, Config.settings.maxTransferTimeout)
-		
+		self.curl.setopt(pycurl.HTTPHEADER, ['User-Agent: firefox-bin'])
 		#self.curl.controlType = None
 		self.curl.partNo = None
 		

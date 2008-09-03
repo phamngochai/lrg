@@ -180,3 +180,7 @@ E_FILEMOVE_CODE = 1
 
 
 MSG_INVALID_USERNAME = 'Invalid account'
+
+
+contrib_list = []
+contrib_list.append('Can Berk Guder')

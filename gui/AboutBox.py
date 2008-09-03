@@ -16,12 +16,16 @@ class AboutBox(wx.Frame):
 		self.versionText = wx.StaticText(self.panel, wx.ID_ANY, VERSION)
 		self.licenseText = wx.StaticText(self.panel, wx.ID_ANY, 'LRG is licensed under GPL')
 		self.gplURLText = wx.StaticText(self.panel, wx.ID_ANY, 'http://www.gnu.org/licenses/gpl.html')
-		self.siteText = wx.StaticText(self.panel, wx.ID_ANY, 'LRG website: http://lrg.sourceforge.net')
+		self.siteText = wx.StaticText(self.panel, wx.ID_ANY, 'LRG website: http://lrg.sourceforge.net')		
 		self.aboutText = wx.StaticText(self.panel, wx.ID_ANY, 'Created by PHAM Ngoc Hai')
 		self.emailText = wx.StaticText(self.panel, wx.ID_ANY, 'Email: pngochai@yahoo.com')
 		self.mysiteText = wx.StaticText(self.panel, wx.ID_ANY, 'http://www.phamngochai.net')
-		self.lnhnText = wx.StaticText(self.panel, wx.ID_ANY, 'LN - HN')
 		
+		contrib_list_str = 'With the contributions of:' + "\n"
+		for name in contrib_list:
+			contrib_list_str += name + "\n"
+		self.contribText = wx.StaticText(self.panel, wx.ID_ANY, contrib_list_str)
+		self.lnhnText = wx.StaticText(self.panel, wx.ID_ANY, 'LN - HN')		
 		self.mainSizer.Add(self.img, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.titleText, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.versionText, 0, wx.ALIGN_CENTER)
@@ -31,6 +35,7 @@ class AboutBox(wx.Frame):
 		self.mainSizer.Add(self.aboutText, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.emailText, 0, wx.ALIGN_CENTER)
 		self.mainSizer.Add(self.mysiteText, 0, wx.ALIGN_CENTER)
+		self.mainSizer.Add(self.contribText, 0, wx.ALIGN_CENTER)		
 		self.mainSizer.Add(self.lnhnText, 0, wx.ALIGN_CENTER)
 
 		self.panel.SetSizerAndFit(self.mainSizer)

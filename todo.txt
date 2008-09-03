@@ -1,6 +1,6 @@
 Todo:
 D wrong pass
-- donwload foder [with password]
+D donwload foder [with password]
 D tried columm
 - cookiejar
 D downloadFileControl fileexist

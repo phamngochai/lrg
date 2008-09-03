@@ -8,6 +8,7 @@ class LRGParser(HTMLParser.HTMLParser):
 	def __init__(self, downloadFileControl, toAddPassword, linkType):	
 		HTMLParser.HTMLParser.__init__(self)		
 		self.valList = []
+		self.done = False
 		self.toAddPassword = toAddPassword
 		self.linkType = linkType
 		self.downloadFileControl = downloadFileControl
@@ -32,6 +33,8 @@ class LRGParser(HTMLParser.HTMLParser):
 					self.downloadFileControl.reportError('Cannot find rapidshare links')
 		
 	def handle_starttag(self, tag, attrs):
+		if self.done:
+			return
 		if (tag.find('form') != -1):
 			for att in attrs:
 				tmpStr = att[0]
@@ -42,7 +45,7 @@ class LRGParser(HTMLParser.HTMLParser):
 			for att in attrs:
 				tupleOne = att[0]
 				tupleTwo = att[1]
-				if (tupleOne.find('name') != -1):
+				if (tupleOne.find('name') != -1):						
 					if (tupleTwo.find('accountid') != -1 and self.toAddPassword):
 						self.valList.append({tupleTwo: Config.settings.rapidshareUsername})
 						continue
@@ -60,9 +63,14 @@ class LRGParser(HTMLParser.HTMLParser):
 							continue
 					name = tupleTwo
 					foundVar = True
-				elif ((tupleOne.find('value') != -1) and (foundVar) and (tupleTwo.find('Free') == -1)):
+				elif (tupleOne.find('value') != -1) and foundVar:					 
 					value = tupleTwo
 					self.valList.append({name: value})
+					if tupleTwo.find('PREMIUM') != -1:
+						print '=================== PREMIUM'
+						self.done = True
+						self.downloadFileControl.processTag(self.valList, self.linksDict)
+						
 		elif (tag == 'a'):
 			if (self.linkType == RAPIDSHARE_FOLDER):	
 				linkProp = {}	 
@@ -85,11 +93,9 @@ class LRGParser(HTMLParser.HTMLParser):
 				
 
 	def handle_endtag(self, tag):
+		if self.done:
+			return
 		if (tag.find('html') != -1):
-			#if (len(self.valList) > 0):
-				#for atts in self.valList:
-					#for key, value in atts.items():
-						#print key + ': ' + value
 			#print 'VALS: ', self.valList
 			self.downloadFileControl.processTag(self.valList, self.linksDict)
 			#self.callback.processTag(tag, attrs)
