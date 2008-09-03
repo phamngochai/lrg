@@ -7,7 +7,7 @@ import pycurl
 DEBUG = 1
 LOG = 1
 
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 
 PANEL_TOP = 0
 PANEL_BOT = 1

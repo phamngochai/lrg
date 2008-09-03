@@ -324,11 +324,11 @@ class DownloadFileControl:
 	def processTag(self, valList, linksDict):
 		formInfo = {}
 		action = None
-		if DEBUG:
-			if (len(valList) > 0):
-				for atts in valList:
-					for key, value in atts.items():
-						print key + ': ' + value
+		#if DEBUG:
+		#	if (len(valList) > 0):
+		#		for atts in valList:
+		#			for key, value in atts.items():
+		#				print key + ': ' + value
 		
 		
 		if (self.downloadFile.getLinkType() == RAPIDSHARE_FOLDER) or (self.downloadFile.getLinkType() == URLCASH):
