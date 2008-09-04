@@ -4,7 +4,7 @@ import time
 import pycurl
 
 
-DEBUG = 1
+DEBUG = 0
 LOG = 1
 
 VERSION = '0.1.3'

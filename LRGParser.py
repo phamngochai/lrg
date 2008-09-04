@@ -34,6 +34,7 @@ class LRGParser(HTMLParser.HTMLParser):
 		
 	def handle_starttag(self, tag, attrs):
 		if self.done:
+			#print 'LRG handle_starttag DONE ', tag
 			return
 		if (tag.find('form') != -1):
 			for att in attrs:
@@ -67,7 +68,7 @@ class LRGParser(HTMLParser.HTMLParser):
 					value = tupleTwo
 					self.valList.append({name: value})
 					if tupleTwo.find('PREMIUM') != -1:
-						print '=================== PREMIUM'
+						#print '=================== PREMIUM'
 						self.done = True
 						self.downloadFileControl.processTag(self.valList, self.linksDict)
 						
@@ -94,6 +95,7 @@ class LRGParser(HTMLParser.HTMLParser):
 
 	def handle_endtag(self, tag):
 		if self.done:
+			#print 'LRG handle_endtag DONE ', tag
 			return
 		if (tag.find('html') != -1):
 			#print 'VALS: ', self.valList
