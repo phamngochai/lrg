@@ -13,7 +13,7 @@ class DownloadFileGridCellRenderer(wx.grid.PyGridCellRenderer):
 		dc.DrawRectangleRect(rect)
 		
 		dc.SetBackgroundMode(wx.TRANSPARENT)
-		//dc.SetFont(attr.GetFont())
+		#dc.SetFont(attr.GetFont())
 		
 		value = grid.GetCellValue(row, col)
 		cellWidth = grid.GetColSize()
