@@ -13,18 +13,8 @@ from TrayIcon import TrayIcon
 from Const import *
 from Log import Log
 
-ID_OPEN = 1001
-ID_PASTE = 1002
-ID_EXIT = 1003
-
-ID_SETTING = 1004
-
 ID_ABORT = 1005
 ID_START = 1006
-ID_DELET = 1007
-
-ID_ABOUT = 2001
-ID_HELP = 2002
 
 ID_STOP_POP_TOP = 3001
 ID_CONT_POP_TOP = 3002
@@ -32,10 +22,8 @@ ID_RESE_POP_TOP = 3003
 ID_DELE_POP_TOP = 3004
 ID_PROP_POP_TOP = 3005
 
-
 ID_REDO_POP_BOT = 4001
 ID_DELE_POP_BOT = 4002
-
 
 class MainFrame(wx.Frame):
 	def __init__(self, parent, id, title, pos, size, control):
@@ -54,24 +42,23 @@ class MainFrame(wx.Frame):
 		self.CreateStatusBar()
 		
 		self.fileMenu = wx.Menu()
-		self.fileMenu.Append(ID_OPEN, '&Open links from file', 'Open links from file')
-		self.fileMenu.Append(ID_PASTE, '&Paste links from clipboard', 'Paste links from clipboard')
+		self.fileMenu.Append(wx.ID_OPEN, '&Open links from file', 'Open links from file')
+		self.fileMenu.Append(wx.ID_PASTE, '&Paste links from clipboard', 'Paste links from clipboard')
 		self.fileMenu.AppendSeparator()
-		self.fileMenu.Append(ID_EXIT,'E&xit', 'Terminate the program')
+		self.fileMenu.Append(wx.ID_EXIT)
 
 		self.editMenu = wx.Menu()
-		self.editMenu.Append(ID_SETTING, '&Settings', 'Settings')
+		self.editMenu.Append(wx.ID_PREFERENCES)
 		
 		self.actionMenu = wx.Menu()
 		self.actionMenu.Append(ID_ABORT, '&Abort all', 'Abort all')
 		self.actionMenu.Append(ID_START, '&Start all', 'Start all')
-		self.actionMenu.Append(ID_DELET, '&Delete all', 'Delete all')
+		self.actionMenu.Append(wx.ID_DELETE, '&Delete all', 'Delete all')
 		
 		self.helpMenu = wx.Menu()
-		self.helpMenu.Append(ID_HELP, '&Help', 'RTFM')
+		self.helpMenu.Append(wx.ID_HELP, '&Help', 'RTFM')
 		self.helpMenu.AppendSeparator()
-		self.helpMenu.Append(ID_ABOUT, 'About &LRG', 'General info about lrg')
-		
+		self.helpMenu.Append(wx.ID_ABOUT, 'About &LRG', 'General info about lrg')
 		
 		self.menuBar = wx.MenuBar()
 		
@@ -95,12 +82,12 @@ class MainFrame(wx.Frame):
 		
 		self.trayIcon = TrayIcon(self.GetIcon(), "Linux Rapidshare Grabber", self)
 		
-		wx.EVT_MENU(self, ID_PASTE, self.onPaste)
-		wx.EVT_MENU(self, ID_OPEN, self.onOpen)
-		wx.EVT_MENU(self, ID_SETTING, self.onConfig)
+		wx.EVT_MENU(self, wx.ID_PASTE, self.onPaste)
+		wx.EVT_MENU(self, wx.ID_OPEN, self.onOpen)
+		wx.EVT_MENU(self, wx.ID_PREFERENCES, self.onConfig)
 		wx.EVT_MENU(self, ID_ABORT, self.onAbortAll)
 		wx.EVT_MENU(self, ID_START, self.onStartAll)
-		wx.EVT_MENU(self, ID_DELET, self.onDeleteAll)
+		wx.EVT_MENU(self, wx.ID_DELETE, self.onDeleteAll)
 		wx.EVT_MENU(self, ID_STOP_POP_TOP, self.onStop)
 		wx.EVT_MENU(self, ID_CONT_POP_TOP, self.onContinue)
 		wx.EVT_MENU(self, ID_RESE_POP_TOP, self.onResetDownload)		
@@ -110,10 +97,10 @@ class MainFrame(wx.Frame):
 		wx.EVT_MENU(self, ID_DELE_POP_BOT, self.onDeleteBot)
 		
 		
-		wx.EVT_MENU(self, ID_HELP, self.onHelp)		
+		wx.EVT_MENU(self, wx.ID_HELP, self.onHelp)		
 		
-		wx.EVT_MENU(self, ID_EXIT, self.onExit)
-		wx.EVT_MENU(self, ID_ABOUT, self.onAbout)
+		wx.EVT_MENU(self, wx.ID_EXIT, self.onExit)
+		wx.EVT_MENU(self, wx.ID_ABOUT, self.onAbout)
 		
 		wx.EVT_CLOSE(self, self.onExit)
 
