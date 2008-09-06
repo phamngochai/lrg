@@ -56,17 +56,17 @@ class Config:
 			try:
 				os.mkdir(Config.settings.downloadDir)
 			except OSError:
-				errStr += 'Cannot open/create ' + Config.settings.downloadDir + "\n" 
+				errStr += 'Cannot open/create ' + Config.settings.downloadDir + "\n"
 		if Config.checkExistence(Config.settings.tmpDir, TYPE_DIR) < EXIST:
 			try:
 				os.mkdir(Config.settings.tmpDir)
 			except OSError:
-				errStr += 'Cannot open/create ' + Config.settings.downloadDir + "\n"				
+				errStr += 'Cannot open/create ' + Config.settings.tmpDir + "\n"
 		if Config.checkExistence(LOG_DIR, TYPE_DIR) < EXIST:
 			try:
 				os.mkdir(LOG_DIR)
 			except OSError:
-				errStr += 'Cannot open/create ' + Config.settings.downloadDir + "\n"				
+				errStr += 'Cannot open/create ' + LOG_DIR + "\n"
 		
 		if errStr != '':
 			print "Error:\n" + errStr

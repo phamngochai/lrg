@@ -8,6 +8,8 @@ from Control import Control
 from ConfigUtils import Config
 from Log import Log
 
+Config.load()
+
 #pyCurl does not like signal
 log = Log()
 try:
@@ -17,8 +19,6 @@ try:
 except ImportError, e:
 	log.debug('Main ImportError', e)
 	print 'Cannot handle signal...'
-	
-Config.load()
 
 app = wx.PySimpleApp()
 app.SetAssertMode(wx.PYAPP_ASSERT_DIALOG)
