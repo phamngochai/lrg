@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Linux Rapidshare Grabber
+Exec=lrg
+Icon=go-down
+Type=Application
+Categories=Network;FileTransfer;
+Version=0.1.4
