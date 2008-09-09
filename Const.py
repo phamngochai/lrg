@@ -171,6 +171,8 @@ errorList.append('Invalid login')
 errorList.append('Invalid password')
 errorList.append('The Account has been found, but the password is incorrect')
 errorList.append('The password is not correct')
+errorList.append('Due to a violation of our terms of use')
+ 
 
 
 
