@@ -127,7 +127,7 @@ class Control(threading.Thread):
 			
 	#reset the download file		
 	def resetDownload(self, id = None):
-		if not id is None:
+		if (not id is None):
 			found = False
 			#self.downloadFileList.changeStatus(fileURL, STAT_S)
 			for downloadFileControl in self.downloadFileControlList:
@@ -154,7 +154,7 @@ class Control(threading.Thread):
 	
 	#stop the download
 	def stopDownload(self, id = None):
-		if not id is None:
+		if not (id is None):
 			found = False
 			#self.downloadFileList.changeStatus(fileURL, STAT_S)
 			for downloadFileControl in self.downloadFileControlList:
@@ -181,7 +181,7 @@ class Control(threading.Thread):
 				
 	
 	def continueDownload(self, id = None):		
-		if not id is None:
+		if not (id is None):
 			downloadFile = self.downloadFileList.getDownloadFileById(id)
 			if downloadFile.getStatus() != STAT_D:
 				downloadFile.setStatus(STAT_Q)
@@ -196,7 +196,7 @@ class Control(threading.Thread):
 		
 	def deleteDownloadTop(self, id = None):
 		#print 'deleteDownloadTop ', id
-		if not id is None:
+		if not (id is None):
 			found = False
 			for downloadFileControl in self.downloadFileControlList:
 				if downloadFileControl.getDownloadFile().getId() == id:
@@ -219,7 +219,7 @@ class Control(threading.Thread):
 		
 	def deleteDownloadBot(self, id = None):
 		#print 'deleteDownloadBot ', id
-		if not id is None:
+		if not (id is None):
 			self.mainFrame.deleteDownloadFileFromList(id, PANEL_BOT)
 			self.downloadFileList.deleteDownloadFileFromCompletedList(id)
 		else:
@@ -249,7 +249,7 @@ class Control(threading.Thread):
 				if len(self.downloadFileControlList) < maxConn:
 					#and self.downloadFileList.getNumberOfDownloadingFile() < maxConn):
 					downloadFile = self.downloadFileList.getQueueingFile()
-					if not downloadFile is None:
+					if not (downloadFile is None):
 						downloadFile.resetRetry()
 						
 						self.log.debug('Control Creating:', i, 'instance', downloadFile.getId(), downloadFile.getFileURL())
@@ -272,7 +272,7 @@ class Control(threading.Thread):
 
 			while (True):
 				curlObject = self.getCurlObject()
-				if not curlObject is None:
+				if not (curlObject is None):
 					multiHandler.add_handle(curlObject)
 				else:
 					break
@@ -298,7 +298,7 @@ class Control(threading.Thread):
 						#print 'Debug ', downloadFileControl
 						self.log.debug('Control OK list checking', downloadFileControl.getDownloadFile().getId(), c.downloadFileId)
 						if downloadFileControl.getDownloadFile().getId() == c.downloadFileId:
-							if not c.partNo is None:
+							if not (c.partNo is None):
 								self.log.debug('Control curl object belongs to downloadPartControl, checkFinish now')
 								downloadFileControl.checkFinish()
 								#downloadFileControl.reset()		
@@ -320,20 +320,21 @@ class Control(threading.Thread):
   					#c.close()
   					multiHandler.remove_handle(c)
   					#print 'err_list removed handle ', c
+  					self.log.debug('Control ERROR list error', errno, errmsg)
   					httpCode = int(c.getinfo(pycurl.HTTP_CODE))
   					#print 'err_list httpCode ', httpCode
 					for downloadFileControl in self.downloadFileControlList:
 						#print 'Debug ', downloadFileControl
 						if downloadFileControl.getDownloadFile().getId() == c.downloadFileId:
 							self.log.debug('Control ERROR list checking', downloadFileControl.getDownloadFile().getId(), c.downloadFileId)
-							if not errno in (pycurl.E_ABORTED_BY_CALLBACK, pycurl.E_PARTIAL_FILE, pycurl.E_WRITE_ERROR):
-								self.log.debug('Control ERROR list unexpected error')				
+							if not errno in (pycurl.E_PARTIAL_FILE, pycurl.E_WRITE_ERROR):
+								self.log.debug('Control ERROR list error unexpected', errno, errmsg)	
 								if downloadFileControl.getDownloadFile().isRetryPossible():
 									self.log.debug('Control ERROR list retrying')
 									downloadFileControl.getDownloadFile().setStatus(STAT_E)
 									downloadFileControl.getDownloadFile().setErrorStr(errmsg)
 									self.mainFrame.update(downloadFileControl.getDownloadFile(), updateType = [FILESTATUS_COL, FILEERROR_COL])								
-									if not c.partNo is None:
+									if not (c.partNo is None):
 										self.log.debug('Control ERROR list downloadPart failed, resetting part')
 										downloadFileControl.resetPart(c.partNo)		
 									else:

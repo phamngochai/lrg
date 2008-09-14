@@ -158,7 +158,7 @@ class DownloadPartControl:
 			self.fileObj.close()
 			self.downloadFileControl.reportError(str(e))
 			#self.log.debug('DownloadPartControl writeBody IOException:', self.downloadPart.getId(), e)
-			return pycurl.E_WRITE_ERROR
+			return 1
 			
 	
 	def progressBody(self, download_t, download_d, upload_t, upload_d):

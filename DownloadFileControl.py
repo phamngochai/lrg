@@ -318,7 +318,8 @@ class DownloadFileControl:
 				self.log.debug('DownloadFileControl, found DownloadPartControl')
 				return downloadPartControl
 		self.log.debug('DownloadFileControl, NO DownloadPartControl CAN BE USE, downloadPartControlList is:', len(self.downloadPartControlList))
-		return None
+		#No return means return None
+		#return None
 
 
 	def processTag(self, valList, linksDict):
@@ -338,7 +339,7 @@ class DownloadFileControl:
 				self.downloadFile.setStatus(STAT_Z)
 				self.control.finishFile(self.downloadFile)
 				self.reset()
-				return			
+				#return			
 			
 		for item in valList:
 			for key, value in item.items():
