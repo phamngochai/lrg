@@ -127,7 +127,7 @@ class Control(threading.Thread):
 			
 	#reset the download file		
 	def resetDownload(self, id = None):
-		if (not id is None):
+		if not (id is None):
 			found = False
 			#self.downloadFileList.changeStatus(fileURL, STAT_S)
 			for downloadFileControl in self.downloadFileControlList:
@@ -252,7 +252,7 @@ class Control(threading.Thread):
 					if not (downloadFile is None):
 						downloadFile.resetRetry()
 						
-						self.log.debug('Control Creating:', i, 'instance', downloadFile.getId(), downloadFile.getFileURL())
+						self.log.debug('Control, Creating:', i, 'instance downloadFileControl', downloadFile.getId(), downloadFile.getFileURL())
 						downloadFileControl = DownloadFileControl(self, self.saveFileControl, downloadFile)
 						downloadFile.setStatus(STAT_D)
 						#downloadFileControl.start()
@@ -265,7 +265,7 @@ class Control(threading.Thread):
 							downloadFile = self.downloadFileList.getQueueingFile()
 							#print 'Control downloadFile is ', downloadFile
 							downloadFileControl.setDownloadFile(downloadFile)
-							self.log.debug('Control New downloadFile for downloadFileControl', downloadFileControl.getDownloadFile().getId())
+							self.log.debug('Control, Assign downloadFile for downloadFileControl', downloadFile.getId(), downloadFile.getFileURL())
 							downloadFileControl.continueBuildCurl()
 					break
 

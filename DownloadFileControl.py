@@ -92,7 +92,7 @@ class DownloadFileControl:
 
 	def stop(self, status = None, toReset = True):
 		#self.isKilled = True
-		if (status == None):
+		if status is None:
 			self.downloadFile.setStatus(STAT_S)
 		else:
 			self.downloadFile.setStatus(status)
@@ -102,7 +102,7 @@ class DownloadFileControl:
 		#self.busy = False
 		#self.done = True
 		#self.gotJob = False
-		if (toReset == True):
+		if toReset:
 			self.reset()
 			
 	def kill(self):
@@ -125,7 +125,7 @@ class DownloadFileControl:
 
 	def resetSettings(self):
 		self.downloadFile.resetInfo()
-		self.stop(STAT_Q, False)
+		self.stop(STAT_Q)
 		
 		#self.reset()
 		self.run()
