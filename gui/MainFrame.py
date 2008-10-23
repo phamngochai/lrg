@@ -36,6 +36,7 @@ class MainFrame(wx.Frame):
 		self.configBox = None
 		self.textBox = None
 		self.aboutBox = None
+		self.addResultsBox = None
 		self.fileDialog = None
 		self.downloadFilePropBox = None
 		
@@ -142,13 +143,13 @@ class MainFrame(wx.Frame):
 			if self.fileDialog.ShowModal() == wx.ID_OK:
 				self.fileName = self.fileDialog.GetDirectory() + '/'+ self.fileDialog.GetFilename()
 				urlFile = open(self.fileName, 'r')
-				addResult = ''
+				addResults = ''
 				for url in urlFile.readlines():
 					if (url.strip() != ''):
-						addResult += self.control.addURL(url.strip()) + "\n"
+						addResults += self.control.addURL(url.strip()) + "\n"
 			self.fileDialog.Destroy()
-			if addResult != '':
-				 resultBox = AddResultsBox(self, wx.ID_ANY, 'Add url results', addResult)
+			if addResults != '':
+				self.showAddResultsBox(addResults)
 			
 	def onAbout(self, event):
 		#print 'Total threads: ', threading.activeCount()
@@ -174,14 +175,13 @@ class MainFrame(wx.Frame):
 	def enterLinks(self, links):
 		#print links
 		urlList = links.split()
-		addResult = ''
+		addResults = ''
 		for url in urlList:
 			#for url in urls.split(" "):			
 			if url.strip() != '':
-				addResult += self.control.addURL(url.strip()) + "\n"
-		if len(urlList) != 0 and addResult != '':
-			 resultBox = AddResultsBox(self, wx.ID_ANY, 'Add url results', addResult)
-
+				addResults += self.control.addURL(url.strip()) + "\n"
+		if len(urlList) != 0 and addResults != '':
+			self.showAddResultsBox(addResults)
 		
 		
 	def onConfig(self, event):
@@ -276,6 +276,12 @@ class MainFrame(wx.Frame):
 			wx.CallAfter(self.panelTop.deleteDownloadFile, id)
 		else:
 			wx.CallAfter(self.panelBot.deleteDownloadFile, id)
+			
+	def showAddResultsBox(self, results):
+		if self.addResultsBox:
+			self.addResultsBox.addResults(results)
+		else:
+			self.addResultsBox = AddResultsBox(self, wx.ID_ANY, results)
 		
 		
 	def emptyList(self, panelPos):

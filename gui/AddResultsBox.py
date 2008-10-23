@@ -2,11 +2,11 @@ import wx
 ID_BUTOK = 101
 
 class AddResultsBox(wx.Frame):
-	def __init__(self, parent, id, title, text):
-		wx.Frame.__init__(self, parent, id, title)
+	def __init__(self, parent, id, text):
+		wx.Frame.__init__(self, parent, id, 'Add url results')
 		
 		self.sizerVertical = wx.BoxSizer(wx.VERTICAL)
-		self.textBox = wx.TextCtrl(self, wx.ID_ANY, style = wx.TE_MULTILINE)
+		self.textBox = wx.TextCtrl(self, wx.ID_ANY, style = wx.TE_MULTILINE | wx.TE_DONTWRAP | wx.TE_READONLY)
 		self.textBox.SetValue(text)
 		
 		self.buttonOK = wx.Button(self, ID_BUTOK, 'OK')
@@ -22,6 +22,9 @@ class AddResultsBox(wx.Frame):
 		self.SetAutoLayout(True)
 		self.Center(wx.BOTH)		
 		self.Show(True)
+
+	def addResults(self, results):
+		self.textBox.AppendText("\n" + results)		
 		
 	def OnClickOk(self, event):
 		self.Destroy()
