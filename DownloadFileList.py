@@ -138,6 +138,15 @@ class DownloadFileList:
 					return downloadFile
 			self.completedFileListLock.release()
 				
+
+	def getDownloadFileByFileURL(self, fileURL, fromQueueingList = True):
+		if fromQueueingList:
+			self.downloadFileListLock.acquire()
+			for downloadFile in self.downloadFileList:
+				if (downloadFile.getFileURL() == fileURL):
+					self.downloadFileListLock.release()
+					return downloadFile
+			self.downloadFileListLock.release()
 		
 		
 	def changeStatus(self, id, status):

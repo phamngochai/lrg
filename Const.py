@@ -7,7 +7,7 @@ import pycurl
 DEBUG = 0
 LOG = 1
 
-VERSION = '0.1.3'
+VERSION = '0.1.5'
 
 PANEL_TOP = 0
 PANEL_BOT = 1
@@ -174,7 +174,8 @@ errorList.append('The password is not correct')
 errorList.append('Due to a violation of our terms of use')
 errorList.append('LinkList not found')
 
-
+MSG_ADD_FILEURL_SUCCESS = 'Successfuly added: '
+MSG_ADD_FILEURL_EXISTED = 'This url existes in the list: '
 
 E_FILEEXIST_CODE = 0
 E_FILEEXIST_MSG = 'Destination file exists'

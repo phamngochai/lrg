@@ -1,7 +1,6 @@
 import os
 import cPickle
 import time
-import wx
 import threading
 import pycurl
 
@@ -23,8 +22,9 @@ class Control(threading.Thread):
 		self.saveFileControl = SaveFileControl()
 		self.saveFileControl.start()
 		self.log = Log()		
-		self.toContinue = True
-		self.isStopped = True
+		#self.toContinue = True
+		self.autoDownload = True
+		self.isStopped = False
 		self.queueingCurlObjectList = []
 		self.curlLock = threading.Lock()
 		#Check and load download files list
@@ -67,12 +67,16 @@ class Control(threading.Thread):
 
 	#Add an url to the queueing list
 	def addURL(self, fileURL):
-		if (not self.toContinue) or (str(fileURL).strip() == ''):
+		if (self.isStopped) or (str(fileURL).strip() == ''):
 			return
-		downloadFile = DownloadFile(str(fileURL).strip())
+		strippedFileURL = str(fileURL).strip()
+		if not self.downloadFileList.getDownloadFileByFileURL(strippedFileURL) is None:
+			return MSG_ADD_FILEURL_EXISTED + strippedFileURL
+		downloadFile = DownloadFile(strippedFileURL)		
 		downloadFile.setId(Config.getId())
 		self.downloadFileList.addQueueingFile(downloadFile)		
 		self.mainFrame.addDownloadFileToList(downloadFile, PANEL_TOP)
+		return MSG_ADD_FILEURL_SUCCESS + strippedFileURL
 	
 	def addURLById(self, id):
 		downloadFile = self.downloadFileList.getDownloadFileById(id, False)
@@ -80,7 +84,8 @@ class Control(threading.Thread):
 	
 	#Stop all downloads, save the queueing list then quit
 	def exit(self):
-		self.toContinue = False
+		#self.toContinue = False
+		self.isStopped = True
 		for downloadFileControl in self.downloadFileControlList:
 			#print 'Stopping ', downloadFileControl.getDownloadFile().getId()
 			downloadFileControl.stop()			
@@ -154,7 +159,7 @@ class Control(threading.Thread):
 	
 	#stop the download
 	def stopDownload(self, id = None):
-		if not (id is None):
+		if not id is None:
 			found = False
 			#self.downloadFileList.changeStatus(fileURL, STAT_S)
 			for downloadFileControl in self.downloadFileControlList:
@@ -171,7 +176,7 @@ class Control(threading.Thread):
 				
 
 		else:
-			self.isStopped = True
+			self.autoDownload = False
 			for downloadFileControl in self.downloadFileControlList:
 				#if downloadFileControl.isAlive():
 				#downloadFileControl.getDownloadFile().setStatus(STAT_S)				
@@ -191,7 +196,7 @@ class Control(threading.Thread):
 			for downloadFile in self.downloadFileList.getList():
 				self.mainFrame.update(downloadFile, updateType = [FILESTATUS_COL])
 				
-		self.isStopped = False
+		self.autoDownload = True
 		
 		
 	def deleteDownloadTop(self, id = None):
@@ -238,14 +243,16 @@ class Control(threading.Thread):
 		
 		i = 0	
 			
-		while self.toContinue:			
+		#while self.toContinue:
+		while not self.isStopped:
 				
 			noDFile = self.downloadFileList.getNumberOfDownloadingFile()
 			noQFile = self.downloadFileList.getNumberOfQueueingFile()
 			noQueueingCurlObject = len(self.queueingCurlObjectList)
 			maxConn = Config.settings.maxConcurrentDownload
+			num_handles = 0
 			
-			while (not self.isStopped) and (self.downloadFileList.getNumberOfQueueingFile() > 0):				
+			while (not self.isStopped) and (self.autoDownload) and (self.downloadFileList.getNumberOfQueueingFile() > 0):				
 				if len(self.downloadFileControlList) < maxConn:
 					#and self.downloadFileList.getNumberOfDownloadingFile() < maxConn):
 					downloadFile = self.downloadFileList.getQueueingFile()
@@ -270,24 +277,25 @@ class Control(threading.Thread):
 					break
 
 
-			while (True):
+			#while True:
+			while not self.isStopped:
 				curlObject = self.getCurlObject()
 				if not (curlObject is None):
 					multiHandler.add_handle(curlObject)
 				else:
 					break
 					
-			while (True):
+			#while True:
+			while not self.isStopped:
 				ret, num_handles = multiHandler.perform()
 				if ret != pycurl.E_CALL_MULTI_PERFORM:
 					#print 'Perfoming break', ret, ' ', num_handles
 					break
 				
 
-			while True:
-			
-				num_q, ok_list, err_list = multiHandler.info_read()
-				
+			#while True:
+			while not self.isStopped:
+				num_q, ok_list, err_list = multiHandler.info_read()				
 				for c in ok_list:
 					#c.close()
 					multiHandler.remove_handle(c)
@@ -327,7 +335,7 @@ class Control(threading.Thread):
 						#print 'Debug ', downloadFileControl
 						if downloadFileControl.getDownloadFile().getId() == c.downloadFileId:
 							self.log.debug('Control ERROR list checking', downloadFileControl.getDownloadFile().getId(), c.downloadFileId)
-							if not errno in (pycurl.E_PARTIAL_FILE, pycurl.E_WRITE_ERROR):
+							if not errno in (pycurl.E_PARTIAL_FILE, pycurl.E_WRITE_ERROR, pycurl.E_ABORTED_BY_CALLBACK):
 								self.log.debug('Control ERROR list error unexpected', errno, errmsg)	
 								if downloadFileControl.getDownloadFile().isRetryPossible():
 									self.log.debug('Control ERROR list retrying')
@@ -352,7 +360,7 @@ class Control(threading.Thread):
 								downloadFileControl.getDownloadFile().setErrorStr('404 File not found')
 								self.mainFrame.update(downloadFileControl.getDownloadFile())
 								downloadFileControl.reset()
-							elif (not downloadFileControl.isDone()) and (not downloadFileControl.isBusy()):
+							elif (not downloadFileControl.isDone()) and (not downloadFileControl.isBusy()) and (errno != pycurl.E_ABORTED_BY_CALLBACK):
 								self.log.debug('Control ERROR list continueBuildCurl', downloadFileControl.getDownloadFile().getId())
 								downloadFileControl.continueBuildCurl()
 							break
@@ -369,7 +377,8 @@ class Control(threading.Thread):
 				ret = multiHandler.select(1.0)
 				if ret == -1:
 					continue
-				while (True):
+				#while (True):
+				while not self.isStopped:
 					ret, num_handles = multiHandler.perform()
 					if ret != pycurl.E_CALL_MULTI_PERFORM:
 						break
@@ -387,16 +396,15 @@ class Control(threading.Thread):
 		#print 'Control Quit'
 	
 	def finishFile(self, downloadFile):
-		if not self.toContinue:
+		if self.isStopped:
 			return
 		self.mainFrame.deleteDownloadFileFromList(downloadFile.getId(), PANEL_TOP)
 		self.mainFrame.addDownloadFileToList(downloadFile, PANEL_BOT)
 		self.downloadFileList.deleteDownloadFileFromDownloadList(downloadFile.getId(), True)
 	
 	def report(self, downloadFile, updateType):
-		if not self.toContinue:
+		if self.isStopped:
 			return
-
 		self.mainFrame.update(downloadFile, updateType)
 
 

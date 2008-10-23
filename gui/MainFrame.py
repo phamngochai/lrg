@@ -8,6 +8,7 @@ from PanelBot import PanelBot
 from TextBox import TextBox
 from ConfigBox import ConfigBox
 from AboutBox import AboutBox
+from AddResultsBox import AddResultsBox
 from DownloadFilePropBox import DownloadFilePropBox
 from TrayIcon import TrayIcon
 from Const import *
@@ -141,10 +142,13 @@ class MainFrame(wx.Frame):
 			if self.fileDialog.ShowModal() == wx.ID_OK:
 				self.fileName = self.fileDialog.GetDirectory() + '/'+ self.fileDialog.GetFilename()
 				urlFile = open(self.fileName, 'r')
+				addResult = ''
 				for url in urlFile.readlines():
 					if (url.strip() != ''):
-						self.control.addURL(url.strip())
+						addResult += self.control.addURL(url.strip()) + "\n"
 			self.fileDialog.Destroy()
+			if addResult != '':
+				 resultBox = AddResultsBox(self, wx.ID_ANY, 'Add url results', addResult)
 			
 	def onAbout(self, event):
 		#print 'Total threads: ', threading.activeCount()
@@ -170,10 +174,13 @@ class MainFrame(wx.Frame):
 	def enterLinks(self, links):
 		#print links
 		urlList = links.split()
+		addResult = ''
 		for url in urlList:
-			#for url in urls.split(" "):
-			if (url.strip() != ''):
-				self.control.addURL(url.strip())
+			#for url in urls.split(" "):			
+			if url.strip() != '':
+				addResult += self.control.addURL(url.strip()) + "\n"
+		if len(urlList) != 0 and addResult != '':
+			 resultBox = AddResultsBox(self, wx.ID_ANY, 'Add url results', addResult)
 
 		
 		
