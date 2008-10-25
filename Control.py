@@ -246,9 +246,9 @@ class Control(threading.Thread):
 		#while self.toContinue:
 		while not self.isStopped:
 				
-			noDFile = self.downloadFileList.getNumberOfDownloadingFile()
-			noQFile = self.downloadFileList.getNumberOfQueueingFile()
-			noQueueingCurlObject = len(self.queueingCurlObjectList)
+			#noDFile = self.downloadFileList.getNumberOfDownloadingFile()
+			#noQFile = self.downloadFileList.getNumberOfQueueingFile()
+			#noQueueingCurlObject = len(self.queueingCurlObjectList)
 			maxConn = Config.settings.maxConcurrentDownload
 			num_handles = 0
 			

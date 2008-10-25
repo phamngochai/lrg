@@ -120,6 +120,7 @@ class DownloadPartControl:
 			
 	def isCompleted(self):
 		if self.downloadPart.isCompleted() :
+			self.downloadPart.setSpeed(0)
 			#print 'Trying to close from isCompleted ', self.downloadPart.getTmpFileName()
 			self.closeTmpFile()
 			self.inUse = False
