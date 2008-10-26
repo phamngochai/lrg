@@ -92,7 +92,7 @@ class ConfigBox(wx.Frame):
 		self.networkSettingsBoxSizer = wx.StaticBoxSizer(self.networkSettingsBox, wx.VERTICAL)
 		
 		self.numberOfConnSizer = wx.BoxSizer(wx.HORIZONTAL)		
-		self.numberOfConnLbl = wx.StaticText(self.networkSettingsPanel, wx.ID_ANY, 'Number of concurent file:')		
+		self.numberOfConnLbl = wx.StaticText(self.networkSettingsPanel, wx.ID_ANY, 'Max. Simultaneous Files:')		
 		self.numberOfConn = wx.TextCtrl(self.networkSettingsPanel, wx.ID_ANY)
 		self.numberOfConn.SetValue(str(Config.settings.maxConcurrentDownload))
 		self.numberOfConnSizer.Add(self.numberOfConnLbl, 0, wx.ALL, PADDING)
@@ -100,14 +100,14 @@ class ConfigBox(wx.Frame):
 		
 		
 		self.numberOfConnPerFileSizer = wx.BoxSizer(wx.HORIZONTAL)		
-		self.numberOfConnPerFileLbl = wx.StaticText(self.networkSettingsPanel, wx.ID_ANY, 'Number of concurent per file:')
+		self.numberOfConnPerFileLbl = wx.StaticText(self.networkSettingsPanel, wx.ID_ANY, 'Connections per File:')
 		self.numberOfConnPerFile = wx.TextCtrl(self.networkSettingsPanel, wx.ID_ANY)
 		self.numberOfConnPerFile.SetValue(str(Config.settings.maxConnectionPerFile))
 		self.numberOfConnPerFileSizer.Add(self.numberOfConnPerFileLbl, 0, wx.ALL, PADDING)
 		self.numberOfConnPerFileSizer.Add(self.numberOfConnPerFile, 0, wx.ALL)
 
 		self.maxRetrySizer = wx.BoxSizer(wx.HORIZONTAL)		
-		self.maxRetryLbl = wx.StaticText(self.networkSettingsPanel, wx.ID_ANY, 'Max retry:')
+		self.maxRetryLbl = wx.StaticText(self.networkSettingsPanel, wx.ID_ANY, 'Max. Retries:')
 		self.maxRetry = wx.TextCtrl(self.networkSettingsPanel, wx.ID_ANY)
 		self.maxRetry.SetValue(str(Config.settings.maxRetry))
 		self.maxRetrySizer.Add(self.maxRetryLbl, 0, wx.ALL, PADDING)
@@ -188,7 +188,7 @@ class ConfigBox(wx.Frame):
 		
 
 		self.noteBook.AddPage(self.generalSettingsPanel, 'General Settings')		
-		self.noteBook.AddPage(self.networkSettingsPanel, 'Netork Settings')		
+		self.noteBook.AddPage(self.networkSettingsPanel, 'Network Settings')		
 
 
 
