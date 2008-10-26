@@ -67,9 +67,11 @@ class Control(threading.Thread):
 
 	#Add an url to the queueing list
 	def addURL(self, fileURL):
-		if (self.isStopped) or (str(fileURL).strip() == ''):
-			return
 		strippedFileURL = str(fileURL).strip()
+		if (self.isStopped) or (strippedFileURL == ''):
+			return
+		if Config.getLinkType(strippedFileURL) == RAPIDSHARE_LINK and strippedFileURL.endswith('.html'):
+			strippedFileURL = strippedFileURL[0: len(strippedFileURL) - len('.html')]
 		if not self.downloadFileList.getDownloadFileByFileURL(strippedFileURL) is None:
 			return MSG_ADD_FILEURL_EXISTED + strippedFileURL
 		downloadFile = DownloadFile(strippedFileURL)		
