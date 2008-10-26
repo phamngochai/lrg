@@ -25,10 +25,11 @@ colorList[STAT_E] = COLOR_ERROR
 
 
 class DownloadFileGrid(wx.grid.Grid):
-	def __init__(self, parent, id, panelPos, popupMenuCallback = None):
+	def __init__(self, parent, id, panelPos, popupMenuCallback = None, keyPressedCallback = None):
 		wx.grid.Grid.__init__(self, parent, wx.ID_ANY)
 		self.panelPos = panelPos
-		self.popupMenuCallback = popupMenuCallback	
+		self.popupMenuCallback = popupMenuCallback
+		self.keyPressedCallback = keyPressedCallback	
 		self.CreateGrid(0, 10)
 		self.SetCellHighlightPenWidth(0)
 		self.SetSelectionMode(wx.grid.Grid.SelectRows)
@@ -73,6 +74,7 @@ class DownloadFileGrid(wx.grid.Grid):
 		
 		
 		self.Bind(wx.grid.EVT_GRID_CELL_RIGHT_CLICK, self.onSelectedIds)
+		self.Bind(wx.EVT_KEY_UP, self.onKeyPressed)
 		
 	#def update(self, downloadFile):
 		#wx.CallAfter(self.realUpdate, downloadFile)
@@ -96,6 +98,14 @@ class DownloadFileGrid(wx.grid.Grid):
 		selectedIds = self.getAllSelectedIds()
 		if (len(selectedIds) > 0):
 			self.popupMenuCallback(selectedIds, event.GetPosition(), self.panelPos)
+			
+	def onKeyPressed(self, event):
+		#print event.GetKeyCode()
+		if event.GetKeyCode() == 127:
+			self.keyPressedCallback(self.getAllSelectedIds(), self.panelPos)
+			#self.deleteDownloadFile(id)
+		elif event.GetKeyCode() == 65 and event.ControlDown():					
+			self.SelectAll()
 	
 		
 	def update(self, downloadFile, updateType):

@@ -110,8 +110,8 @@ class MainFrame(wx.Frame):
 		
 		self.splitter = wx.SplitterWindow(self, wx.ID_ANY)
 		self.splitter.SetBorderSize(20)
-		self.panelTop = PanelTop(self.splitter, wx.ID_ANY, self.popupMenuCallback)
-		self.panelBot = PanelBot(self.splitter, wx.ID_ANY, self.popupMenuCallback)
+		self.panelTop = PanelTop(self.splitter, wx.ID_ANY, self.popupMenuCallback, self.keyPressedCallback)
+		self.panelBot = PanelBot(self.splitter, wx.ID_ANY, self.popupMenuCallback, self.keyPressedCallback)
 		self.splitter.SplitHorizontally(self.panelTop, self.panelBot)
 		
 		self.sizerContainer = wx.BoxSizer(wx.VERTICAL)
@@ -140,10 +140,10 @@ class MainFrame(wx.Frame):
 			self.fileDialog.show()
 		else:
 			self.fileDialog = wx.FileDialog(self, 'Please select a text file', self.dirName, '', '*.*', wx.OPEN)
+			addResults = ''
 			if self.fileDialog.ShowModal() == wx.ID_OK:
 				self.fileName = self.fileDialog.GetDirectory() + '/'+ self.fileDialog.GetFilename()
-				urlFile = open(self.fileName, 'r')
-				addResults = ''
+				urlFile = open(self.fileName, 'r')				
 				for url in urlFile.readlines():
 					if (url.strip() != ''):
 						addResults += self.control.addURL(url.strip()) + "\n"
@@ -158,11 +158,11 @@ class MainFrame(wx.Frame):
 		else:
 			self.aboutBox = AboutBox(self, wx.ID_ANY, 'About')
 		
-	def popupMenuCallback(self, selectedIds, position, PanelPos):
+	def popupMenuCallback(self, selectedIds, position, panelPos):
 		#print selectedRows
 		#print event
 		self.selectedIds = selectedIds
-		if (PanelPos == PANEL_TOP):
+		if (panelPos == PANEL_TOP):
 			if (len(self.selectedIds)  == 1):
 				self.topPopupMenu.Enable(ID_PROP_POP_TOP, True)
 			else:
@@ -171,6 +171,12 @@ class MainFrame(wx.Frame):
 		else:
 			self.panelBot.PopupMenu(self.botPopupMenu, position)
 
+	def keyPressedCallback(self, selectedIds, panelPos):
+		self.selectedIds = selectedIds
+		if panelPos == PANEL_TOP:			
+			self.onDeleteTop(None)
+		else:
+			self.onDeleteBot(None)
 		
 	def enterLinks(self, links):
 		#print links

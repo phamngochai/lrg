@@ -15,7 +15,7 @@ D Redownload
 D Color line
 - change download order
 D Separate setting and queueing file
-- Ctrl+A, Del...
+D Ctrl+A, Del...
 D Percentage
 D Download dir button
 D Apply save
